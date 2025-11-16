@@ -8,7 +8,7 @@ WorkSphere est une application web qui permet de gerer le personnel directement 
 
 Fonctionnalites cles:
 
-Ajout, déplacement et suppression d’employes
+Ajout, deplacement et suppression d’employes
 
 Modale d’ajout avec previsualisation photo + experiences dynamiques
 
