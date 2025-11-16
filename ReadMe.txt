@@ -42,7 +42,7 @@ Gestion du projet:
 
 Planification : Trello / Jira / GitHub Projects
 
-Déploiement : GitHub Pages ou Vercel
+Deploiement : GitHub Pages ou Vercel
 
 Validation : W3C + responsive complet
 
