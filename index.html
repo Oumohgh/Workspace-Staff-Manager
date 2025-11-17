@@ -1,22 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html >
 <head>
-    <Title>Workspace Staff Manager</Title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/style.css">
-</head>
-<body>
-    <aside>
-        <div class="employes"></div>
-    </aside>
-    <main class="plan">
-        <div class="Reunionsalle"></div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkSpace Staff Manager</title>
 
+  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+ 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<!-- FLEX: aside + main horizontal -->
+<body class="d-flex bg-light" style="min-height: 100vh;">
+
+
+    <!-- Barre  (ASIDE)       -->
+   
+    <aside class="bg-white p-4 shadow-sm flex-shrink-0" style="width: 300px;">
+        <h2 class="fs-5 fw-semibold">Employes (Non assignes)</h2>
+
+        <button class="btn btn-success w-100 mt-3">Ajouter un employe</button>
+
+        <ul class="list-unstyled mt-4 d-flex flex-column gap-2">
+
+            <!-- Employe 1 -->
+            <li>
+                <div class="p-2 d-flex gap-3 align-items-center bg-primary bg-opacity-10 border rounded">
+                    <img src="./assets/images/plan.jpg" 
+                         class="rounded-circle" style="width: 40px; height: 40px;" alt="photo employé">
+
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 fw-medium">mohammed</h6>
+                        <p class="text-muted mb-0">Agent de sécurité</p>
+                    </div>
+
+                    <button class="btn p-0 text-success"><i class="bi bi-pencil"></i></button>
+                    <button class="btn p-0 text-danger"><i class="bi bi-trash"></i></button>
+                </div>
+            </li>
+
+            <!-- Employe 2 -->
+            <li>
+                <div class="p-2 d-flex gap-3 align-items-center bg-primary bg-opacity-10 border rounded">
+                    <img src="./assets/images/plan.jpg" 
+                         class="rounded-circle" style="width: 40px; height: 40px;" alt="photo employé">
+
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 fw-medium">Mohammed</h6>
+                        <p class="text-muted mb-0">Receptionniste</p>
+                    </div>
+
+                    <button class="btn p-0 text-success"><i class="bi bi-pencil"></i></button>
+                    <button class="btn p-0 text-danger"><i class="bi bi-trash"></i></button>
+                </div>
+            </li>
+
+            <!-- Employe 3 -->
+            <li>
+                <div class="p-2 d-flex gap-3 align-items-center bg-primary bg-opacity-10 border rounded">
+                    <img src="/assets/images/plan.jpg" 
+                         class="rounded-circle" style="width: 40px; height: 40px;" alt="photo employé">
+
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 fw-medium">Omar </h6>
+                        <p class="text-muted mb-0">Technicien IT</p>
+                    </div>
+
+                    <button class="btn p-0 text-success"><i class="bi bi-pencil"></i></button>
+                    <button class="btn p-0 text-danger"><i class="bi bi-trash"></i></button>
+                </div>
+            </li>
+
+        </ul>
+    </aside>
+
+
+   
+    <!-- Zone principale (MAIN)       -->
+    <!-- ============================ -->
+    <main class="flex-grow-1 position-relative p-3">
+
+        <img src="./assets/images/plan.jpg" class="img-fluid w-100" alt="plan du batiment">
+
+        <!-- Overlay grid -->
+        <div class="position-absolute top-0 start-0 w-100 h-100 p-2 bg-dark bg-opacity-25 d-grid"
+             style="grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(12, 1fr); gap: 8px;">
+
+            <!-- Reeception -->
+            <div class="d-flex flex-column justify-content-center align-items-center bg-success bg-opacity-25 p-2"
+                 style="grid-column: span 5; grid-row: span 4;">
+                <ul class="w-100 h-100 d-flex flex-wrap gap-2 justify-content-center align-items-center"></ul>
+                <button class="btn btn-success"><i class="bi bi-plus"></i></button>
+            </div>
+
+            <!-- Salle des serveurs -->
+            <div class="d-flex flex-column justify-content-center align-items-center bg-danger bg-opacity-25 p-2"
+                 style="grid-column: span 5; grid-row: span 8;">
+                <ul class="w-100 h-100 d-flex flex-wrap gap-2 justify-content-center align-items-center"></ul>
+                <button class="btn btn-success"><i class="bi bi-plus"></i></button>
+            </div>
+
+            <!-- Conference Salle du personnel -->
+            <div class="d-flex gap-2" style="grid-column: 7 / span 6; grid-row: 1 / span 4;">
+                <div class="w-100 h-100 bg-info bg-opacity-25 p-2 d-flex flex-column justify-content-center align-items-center">
+                    <ul class="w-100 h-100 d-flex flex-wrap gap-2 justify-content-center align-items-center"></ul>
+                    <button class="btn btn-success"><i class="bi bi-plus"></i></button>
+                </div>
+
+                <div class="w-100 h-100 bg-warning bg-opacity-25 p-2 d-flex flex-column justify-content-center align-items-center">
+                    <ul class="w-100 h-100 d-flex flex-wrap gap-2 justify-content-center align-items-center"></ul>
+                    <button class="btn btn-success"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+
+            <!-- Securite & Archives -->
+            <div class="d-flex gap-2" style="grid-column: 7 / span 6; grid-row: 9 / span 4;">
+                <div class="w-100 h-100 bg-secondary bg-opacity-25 p-2 d-flex flex-column justify-content-center align-items-center">
+                    <ul class="w-100 h-100 d-flex flex-wrap gap-2 justify-content-center align-items-center"></ul>
+                    <button class="btn btn-success"><i class="bi bi-plus"></i></button>
+                </div>
+
+                <div class="w-100 h-100 bg-primary bg-opacity-25 p-2 d-flex flex-column justify-content-center align-items-center">
+                    <ul class="w-100 h-100 d-flex flex-wrap gap-2 justify-content-center align-items-center"></ul>
+                    <button class="btn btn-success"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+
+        </div>
     </main>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="source.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="source.js"></script>
 </body>
-
 </html>
