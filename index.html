@@ -1,57 +1,193 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workspace Staff Manager</title>
-
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Workspace Staff Manager</title>
 </head>
 
-<body class="bg-light">
-
-<!-- PAGE WRAPPER -->
-<div class="container-fluid">
-    <div class="row min-vh-100">
-
-        <aside class="col-12 col-md-4 col-lg-3 bg-white p-4 shadow-sm">
-
-            <h2 class="fs-5 fw-semibold">Employes non assignes</h2>
-
-            <!-- Add Employee Button -->
-            <button class="btn btn-success w-100 mt-3" data-bs-toggle="modal" data-bs-target="#modalAddEmployee">
-                <i class="bi bi-person-plus"></i> Ajouter un employe
-            </button>
-
-            
-          
-            <div class="mt-3">
-                <input type="search" class="form-control" placeholder="Rechercher un employe">
+<body class="container-fluid">
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <div class="logo-icon">
+                <i class="fa-solid fa-building"></i>
             </div>
-
-            <ul class="list-unstyled mt-4 d-flex flex-column gap-2">
-
-                <li>
-                    <div class="p-2 d-flex align-items-center bg-primary bg-opacity-10 border rounded gap-3">
-                        <img src="./assets/images/emp1.jpg" class="rounded-circle img-fluid" 
-                             style="width: 40px; height: 40px;" alt="Employe">
-
-                        <div class="flex-grow-1">
-                            <h6 class="mb-0 fw-medium">Mohammed</h6>
-                            <p class="text-muted mb-0 small">Agent de securite</p>
-                        </div>
-
-                        <button class="btn p-0 text-success"><i class="bi bi-pencil"></i></button>
-                        <button class="btn p-0 text-danger"><i class="bi bi-trash"></i></button>
+            <div class="logo-content">
+                <h1>StafMap</h1>
+                <p>Organiser votre personnel par zones</p>
+            </div>
+        </nav>
+    </header>
+    <!--// HEADER //-->
+    <div>
+        <div class="plan row  vh-100">
+            <div class="  col-lg-5 col-md sidebar sdbar">
+                <div class="container-ajouter-emp">
+                    <div class="ajout-content">
+                        <h2><span><i class="fa-regular fa-user"></i></span> Employés non assignés</h2>
+                        <span class="nbr-employe">0</span>
                     </div>
-                </li>
+                    <button type="button" class="btn btn-primary bnt-ajouter" data-bs-toggle="modal"
+                        data-bs-target="#ajoutEmployeModal"> + Ajouter un employé</button>
+                </div>
+                <div class="container-search">
+                    <form class="d-flex">
+                        <input class="form-control me-2 search" type="search" placeholder="Rechercher par nom ou role"
+                            aria-label="Search" id="searchRoleNom">
+                    </form>
+                </div>
+                <div class="list-employe" id="list-employe">
+                    <!-- <div class="card" id="cardemp">
+                        <div class="card-body">
+                            <div class="profile">
+                                <img src="images/photo.jpg" alt="image profile">
+                            </div>
+                            <div class="content-profile">
+                                <h4>noha</h4>
+                                <span>developpeur</span>
+                            </div>
+                            <div class="icons">
+                                <i class="fa-solid fa-pen"></i>
+                                <i class="fa-solid fa-trash"></i>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="AucunEmployerExistCard">
+                        <i class="fa-regular fa-user"></i>
+                        <h4>Aucun employe exist</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col plan-etage">
+                
+                <!-- <div class="titre-main">
+                    <h1>Plan d'étage</h1>
+                    <p>Glissez-déposez les employés dans les zones appropriées</p>
+                </div>
+                <div class="image-etage">
+                    <div class="row h-50 bg-primary">
+                        <div class="col">1</div>
+                        <div class="col">1</div>
+                        <div class="col">1</div>
+                    </div>
+                    <div class="row h-50 bg-secondary">
+                        <div class="col">2</div>
+                        <div class="col">2</div>
+                        <div class="col">2</div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
 
-            </ul>
-        </aside>
 
-       
+
+
+
+    <!-- modal d'ajout d'employe -->
+    <div class="modal fade" id="ajoutEmployeModal" tabindex="-1" aria-labelledby="ajoutModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <fieldset class="modal-header">
+                    <fieldset class="modal-title" id="exampleModalLabel">Ajouter un nouvel employé</fieldset>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </fieldset>
+                <form class="modal-body" name="ajouterEmployer" action="">
+                    <div class="mb-3">
+                        <label for="nomComplet" class="form-label">Nom complet</label>
+                        <input type="text" class="form-control" id="nomComplet" placeholder="Nohaila Ait Hammad"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="selectRole" class="form-label">Role</label>
+                        <select class="form-select" id="selectRole" onchange="toggle(this)">
+                            <option selected>Choisie un role</option>
+                            <option value="Developpeur">Développeur</option>
+                            <option value="Receptionniste">Réceptionniste</option>
+                            <option value="Technicien it">Technicien IT</option>
+                            <option value="Agent de securite">Agent de sécurité</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Nettoyage">Nettoyage</option>
+                            <option value="Archiviste">Archiviste</option>
+                            <option value="Comptable">Comptable</option>
+                            <option value="RH">RH</option>
+                            <option value="Commercial">Commercial</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telephone" class="form-label">Télephone</label>
+                        <input type="text" class="form-control" id="telephone" placeholder="+212600000000">
+                    </div>
+                    <div class="mb-3">
+                        <label for="photo" class="form-label">Photo (URL)</label>
+                        <input type="text" class="form-control" id="photo" placeholder="https://example.com/photo.jpg">
+                        <div id="imageArea">
+                        </div>
+                    </div>
+                    <fieldset class="modal-header">
+                        <fieldset class="modal-title" id="experiences">Expériences professionnelles</fieldset>
+                        <button type="button" id="ajouterExperience" class="btn btn-secondary"> + Ajouter</button>
+                    </fieldset>
+                    <div  id="experiencesListDynamicForm">
+                        <!-- <div class="dynamicForm">
+                            <div class="mb-3">
+                                <label for="societe" class="form-label">Societé</label>
+                                <input type="text" class="form-control" id="societe" placeholder="Youcode">
+                            </div>
+                            <div class="mb-3">
+                                <label for="Role" class="form-label">Role</label>
+                                <input type="text" class="form-control" id="Role" placeholder="IT">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dateDebut" class="form-label">De</label>
+                                <input type="date" class="form-control" id="dateDebut" placeholder="">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dateFin" class="form-label">A</label>
+                                <input type="date" class="form-control" id="dateFin" placeholder="">
+                            </div>
+                        </div> -->
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <div class="form-group mt-4">
+                            <button type="submit" id="ajouter" class="ajouterComptetnece btn btn-info w-100"> Ajouter
+                                l'employe</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script src="scripts/Ssource.js"></script>
+    <script src="https://kit.fontawesome.com/a680a19743.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
