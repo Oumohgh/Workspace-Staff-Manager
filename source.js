@@ -64,5 +64,9 @@ function EmployeeSaved(employee) {
         saveToLocalStorage("employee", employee);
     }
 }
-
+document.addEventListener("click", (event) => {
+    if (event.target.classList.contains("profile-info")) {
+        loadToProfileModal(event.target.getAttribute("userId"));
+    }
+});
 
