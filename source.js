@@ -34,43 +34,11 @@ function saveDataEmployerToLocalStorage(keyData, dataList) {
       localStorage.setItem(keyData, JSON.stringify(dataList));
 }
 
-// renderCardsEmplyers(employes);
-function renderCardsEmplyers(employerList) {
-      document.getElementById("list-employe").innerHTML =
-      renderListEmployers(employerList);
-}
 
-function renderListEmployers(employes) {
-      cardListEmploye = "";
-      employes.map((employe) => {
-      cardListEmploye += renderCard(employe);
-      });
-      return cardListEmploye;
+function displayUnassignedEmployeesList(assignedEmployee) {
+    return`    
+        <div class="d-flex gap-5 g-5 assignedEmployeesCheckbox">
+            <input type="checkbox" class="checkbox" name="${assignedEmployee.name}" room="${currentRoomName}">${assignedEmployee.name}
+        </div>
+    `
 }
-
-function renderCard(employe) {
-      return `
-            <div class="card">
-            ${renderDetailCard(employe)}
-            </div>
-      `;
-}
-
-function renderDetailCard(employe) {
-return `
-      <div class="card-body">
-            <div class="profile">
-                  <img src=${employe.photo} alt="image profile">
-            </div>
-            <div class="content-profile">
-                  <h4>${employe.nom}</h4>
-                  <span>${employe.role}</span>
-            </div>
-            <div class="icons">
-                  <i class="fa-solid fa-pen"></i>
-                  <i class="fa-solid fa-trash"></i>
-            </div>
-      </div>
-      `;
-}
-
