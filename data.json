@@ -1,0 +1,18 @@
+[
+    {
+        "nom":"oughlane",
+        "role": "Devloppeur",
+        "email":"oughlane@gmail.com",
+        "photo":"../images/photo.jpg",
+        "telephone":"+210000000",
+        "experiences":[]
+    },
+    {
+        "nom":"Mohammed",
+        "role": "Devloppeur",
+        "email":"oughlane@gmail.com",
+        "photo":"../images/photo.jpg",
+        "telephone":"+21200000",
+        "experiences":[]
+    }
+]
