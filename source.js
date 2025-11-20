@@ -1,4 +1,3 @@
-
 const ROOM_IDS = {
   reception: "salle-reception",
   serveurs: "salle-serveurs",
@@ -20,7 +19,6 @@ const ROLE_RULES = { //rroms m allowed
 
 const STORAGE_KEY = "employees";
 
-
 let employees = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 let currentAssignRoom = null; 
 
@@ -36,8 +34,6 @@ function fullName(obj){
 function placeholderPhoto(){
   return "./assets/profile.png";
 }
-
-
 
 /* Sidebar*/
 function renderSidebarUnassigned(){
@@ -118,7 +114,7 @@ function showModal(emp){
         ${ (emp.experiences || []).map(x=>`<div class="mb-2 text-sm"><strong>${x.company||""}</strong> — ${x.role||""} <br><small>${x.duration||""}</small></div>`).join("") || "<div class='text-xs text-gray-500'>No experiences</div>"}
       </div>
       <div class="mt-3 flex gap-2">
-        <button id="closePreview2" class="flex-1 py-2 bg-indigo-600 text-white rounded">Close</button>
+        <button id="closePreview2" class="flex-1 py-2 bg-indigo-600 text-black rounded">Fermer</button>
       </div>
     </div>
   `;
@@ -147,7 +143,7 @@ function openAssignModalFor(roomKey){
           <div class="w-10 h-10 rounded-full bg-cover" style="background-image:url('${emp.photo || placeholderPhoto()}')"></div>
           <div>
             <div class="text-sm font-medium">${fullName(emp)}</div>
-            <div class="text-xs text-gray-500">${emp.role}</div>
+            <div class="text-xs text-black-500">${emp.role}</div>
           </div>
         </div>
         <div>
@@ -187,7 +183,7 @@ function isAdmisForRoom(role, roomKey){
 
 /* button jded 3la work form*/
 const addNewWorkerBtn = document.getElementById("add-new-worker");
-const formOverlay = document.querySelector(".form-worker");
+const formAffichageEmploye = document.querySelector(".form-worker");
 const staffForm = document.getElementById("staffForm");
 const imageUrlInput = document.getElementById("imageUrl");
 const imagePreview = document.getElementById("imagePreview");
@@ -195,15 +191,15 @@ const placeholderText = document.getElementById("placeholderText");
 
 if(addNewWorkerBtn){
   addNewWorkerBtn.addEventListener("click", ()=> {
-    formOverlay.classList.remove("hidden");
-    formOverlay.classList.add("flex");
+    formAffichageEmploye.classList.remove("hidden");
+    formAffichageEmploye.classList.add("flex");
   });
 }
 
 
 staffForm.addEventListener("reset", ()=> {
-  formOverlay.classList.add("hidden");
-  formOverlay.classList.remove("flex");
+  formAffichageEmploye.classList.add("hidden");
+  formAffichageEmploye.classList.remove("flex");
 //cleari img
   imagePreview.src = "";
   imagePreview.classList.add("hidden");
@@ -264,7 +260,7 @@ staffForm.addEventListener("submit", (ev)=>{
   const role      = document.getElementById("role-worker").value || "autres";
 
   const newEmp = {
-    id:// crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+    id:idcount,// crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
     firstname,
     lastname,
     email,
@@ -287,11 +283,11 @@ staffForm.addEventListener("submit", (ev)=>{
   employees.push(newEmp);
   saveEmployees();
 
-  
+
   staffForm.reset();
   document.querySelector(".form-experience").innerHTML = "";
-  formOverlay.classList.add("hidden");
-  formOverlay.classList.remove("flex");
+  formAffichageEmploye.classList.add("hidden");
+  formAffichageEmploye.classList.remove("flex");
   imagePreview.src = "";
   imagePreview.classList.add("hidden");
   placeholderText.classList.remove("hidden");
