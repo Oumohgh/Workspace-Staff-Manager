@@ -11,14 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
             renderDetails();
         });
 
-    // Prévisualisation photo
+    // Previsualisation photo
     const input = document.getElementById("file");
     const photoModal = document.getElementById("photoModal");
     input.addEventListener("change", () => {
         photoModal.src = URL.createObjectURL(input.files[0]);
     });
 
-    // Ouvrir Modal d'ajout
+    // ouvrir Modal dajout
     add_btn.addEventListener('click', () => {
         modal.style.display = 'flex';
         modal.addEventListener('click', function(e) {
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Ajouter experiences dynamiques
+    // ajouter experiences dynamiques
     const containerExp = document.getElementById("experiencesContainer");
     const addExpBtn = document.getElementById("addExperienceBtn");
     addExpBtn.addEventListener("click", () => {
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("addForm").addEventListener("submit", ajouterEmployer);
 });
 
-// === Rendu des cartes === //
+// rendu des cartes  //
 function renderDetails() {
     const serviceLists = document.getElementById("listCard");
     serviceLists.innerHTML = "";
@@ -75,7 +75,7 @@ function renderDetails() {
 
 }
 
-//  function card details emoyer  //
+//  function card details employer //
 function cardDetails() {
     const cards = document.querySelectorAll(".profil-card");
     const previewModal = document.getElementById("modalPreview");

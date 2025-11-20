@@ -1,341 +1,115 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+body{
+    background-color: rgb(231, 235, 248);
 }
 
-.container {
-    /* background-color: red; */
-    display: flex;
+img{
+    width: 50px;
+    height: 50px;
 }
 
-.sidebar {
-    width: 280px;
-    background: darkkhaki;
-    border-right: 1px solid #ddd;
-    display: flex;
-    flex-direction: column;
-    transition: all .3s ease;
-    height: 100vh;
-
+main{
+    padding: 0 !important;
+    background-image: url(images/plan-workstaf.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
-
-.sidebar header {
-    padding: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    border-bottom: 1px solid #eee;
+#cotainer{
+    height: 85vh ;
 }
 
-
-.sidebar .staff-list {
-    align-items: center;
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px;
+#row-top{
+    height: 34%;
 }
 
-
-
-.profil-card {
-    background: var(--soft-grey);
-    padding: 12px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    background-color: #eef3ff;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: transform .2s ease;
+#row-bottom{
+    height: 66%;
 }
 
-.profil-card:hover {
-    transform: scale(1.03);
-}
-
-
-
-.add-btn {
-    margin: 15px;
-    padding: 12px;
-    background: green;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: .2s;
-}
-
-.add-btn:hover {
-    background: #46a04a;
-}
-
-.btn-edit{
-    background-color: rgb(247, 45, 45);
-    border: none;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 10px;
-    color: whitesmoke;
-    width: 40px;
-}
-.btn-edit:hover{
-        background-color: rgb(0, 60, 255);
-}
-
-/* MODALE */
-.modal-bg {
-display: none;
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,.5);
-justify-content: center;
-align-items: center;
-}
-
-
-
-.modal {
-    max-height: 80vh;      
-    overflow-y: auto;      
-    width: 500px;       
-    padding: 20px;
-    background-color: #81df67;
-    border-radius: 8px;
-    position: relative;
-}
-
-
-.experience, .competence {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-input {
-    flex: 1;
-    padding: 5px;
-}
-
-
-
-.info-photo{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-items: center;
-}
-
-
-@keyframes fadeIn {
-from {transform: scale(.8); opacity: 0;}
-to {transform: scale(1); opacity: 1;}
-}
-
-
-.modal input  {
-width: 100%;
-padding: 10px;
-margin: 8px 0;
-border-radius: 8px;
-border: 1px solid #aaa;
-}
-.modal select{
-    width: 100%;
-padding: 10px;
-margin: 8px 0;
-border-radius: 8px;
-border: 1px solid #aaa;
-}
-#photoURL #photoModal{
-     width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: #ddd;
-}
-
-.btn-save {
-padding: 10px;
-width: 100%;
-background: green;
-border: none;
-border-radius: 8px;
-color: white;
-font-size: 16px;
-cursor: pointer;
-margin-top: 10px;
-}
-
-.main{
-    text-align: center;
-    width: 100%;
-    background-color: #46a04a;
-}
-.zones{
-    display: flex;
-    flex-wrap: wrap;
-    padding: 10px;
-    gap: 10px;
-
-}
-.zones h3{
-    padding-top: 20px;
-    
-}
-
-.zone{
-    width: 300px;
-    height: 250px;
-    background-image:url(./reception.png) ;
-    background-size: cover;
-
-}
-.zone1{
-    
-    width: 300px;
-    height: 250px;
-    background-image:url(./servers.png) ;
-    background-size: cover;
-}
-.zone2{
-    width: 300px;
-    height: 250px;
-    background-image:url(./securite.png) ;
-    background-size: cover;
-}
-.zone3{
-    width: 300px;
-    height: 250px;
-    background-image:url(./staff.png) ;
-    background-size: cover;
-}
-.zone4{
-    width: 300px;
-    height: 250px;
-    background-image:url(./archives.png) ;
-    background-size: cover;
-}
-.zone5{
-    width: 300px;
-    height: 250px;
-    background-image:url(./conference.png.png) ;
-    background-size: cover;
-}
-
-.add-worker-btn{
-    width: 70px;
-    background-color: #bfff00;
-    border: none;
-    border-radius: 30px;
-}
-.add-worker-btn:hover{
-    background-color: #587d5a;
-}
-
-
-span{
-    /* position: absolute; */
-    color: red;
-    bottom: 12px;
-    right: 17px;
-
-}
-
-
-
-.modal-bg {
-    display: none;
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-.zone-staff{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    gap: 5px;
-    /* margin-top: 10px; */
-    overflow-y: auto;
-}
-.zone-staff .profil-card{
-    width: 250px;
-    /* padding: 15px; */
-    /* margin: 10px; */
+.card{
     cursor: pointer;
 }
 
-
-/* Style dropdown select dynamically added */
-.zone select {
-    padding: 5px 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    margin-top: 5px;
-    outline: none;
-    transition: all 0.2s ease-in-out;
+.card:hover{
+    background-color: rgb(237, 234, 234);
 }
 
-.zone select:hover {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0,123,255,0.3);
+.btnSuprimier{
+    z-index: 3;
 }
+@media(max-width:600px){
 
-.zone select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0,123,255,0.5);
-}
+    #cotainer{
+        display: grid ;
+        gap: 4rem;
+    }
 
-/* Style button assign */
-.assign-btn {
-    padding: 5px 10px;
-    border: none;
-    background-color: #032d5a;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s ease;
-}
+    aside{
+        width: 90% !important;
+        margin: 0 auto;
+    }
 
-#addExperienceBtn{
-    padding: 10px;
-width: 100%;
-background: rgb(255, 94, 0);
-border: none;
-border-radius: 8px;
-color: white;
-font-size: 16px;
-cursor: pointer;
-margin-top: 10px;
-}
+      main{
+        display: flex;
+        background-image: none;
+        justify-content: space-evenly;
+    }
 
-.modal.small {
-    width: 350px;
-}
+    #row-top {
+        display: grid;
+    }
+     #row-bottom{
+        display: grid ;
+        gap: 1;
+     }
 
-.zone-employee-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 15px;
-}
+     #div_personnel_archives{
+        display: grid;
+     }
 
-.zone-employee-list li {
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.zone-employee-list li:hover {
-    background: #f0f0f0;
+    #div_conference{
+        background-image: url(./conference.png.png);
+        background-size: cover;
+        width: 21rem;
+        height: 10rem;
+        
+    }
+    #div_serveurs{
+        background-image: url(./servers.png);
+        background-size: cover;
+        width: 100%;
+        height: 10rem;
+       
+        
+    }
+    #div_securite{
+         background-image: url(./securite.png);
+         background-size: cover;
+         width: 100%;
+         height: 18rem ;
+        
+        
+    }
+    #div_Receptionnistes{
+         background-image: url(./reception.png);
+         background-size: cover;
+        width: 17rem;
+        height: 16rem;
+        
+    }
+    #div_personnel{
+       background-image: url(./staff.png);
+      background-size: cover;
+       width: 17rem;
+        height: 14rem;
+        
+    }
+    #div_archives{
+        background-image: url(./archives.png);
+       background-size: cover;
+        width: 17rem;
+        height: 14rem;
+     
+    }
+   
 }
