@@ -1,105 +1,69 @@
-let dataEmployer = [];
-let add_btn = document.getElementById("btn-add");
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    fetch("./data.json")
-        .then(res => res.json())
-        .then(data => {
-            dataEmployer = JSON.parse(localStorage.getItem("employer")) || data;
-            renderDetails();
-        });
-
-    // Previsualisation photo
-    const input = document.getElementById("file");
-    const photoModal = document.getElementById("photoModal");
-    input.addEventListener("change", () => {
-        photoModal.src = URL.createObjectURL(input.files[0]);
-    });
 
 
+const ROOM_IDS = {
+  reception: "salle-reseption",
+  serveurs: "salle-serveurs",
+  securite: "salle-securite",
+  personnel: "salle-personnel",
+  archives: "salle-archives",
+  conference: "salle-conference"
+};
 
-    // ouvrir Modal dajout
-    add_btn.addEventListener('click', () => {
-        modal.style.display = 'flex';
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) this.style.display = 'none';
-        });
-    });
+// 
+const ROLE_RULES = { //rroms m allowed
+  it: ["serveurs"],
+  securite: ["securite"],
+  reseption: ["reception"],
+  manager: ["reception","serveurs","securite","personnel","archives","conference"],
+  nettoyage: ["reception","serveurs","securite","personnel","conference"], // not archives
+  autres: ["reception","serveurs","securite","personnel","conference","archives"]
+};
 
-    // ajouter experiences dynamiques
-    const containerExp = document.getElementById("experiencesContainer");
-    const addExpBtn = document.getElementById("addExperienceBtn");
-    addExpBtn.addEventListener("click", () => {
-        const div = document.createElement("div");
-        div.classList.add("experience");
-        div.innerHTML = `
-            <input type="text" name="poste[]" placeholder="Poste">
-            <input type="text" name="duree[]" placeholder="Durée">
-            <input type="text" name="description[]" placeholder="Description">
-            <button type="button" class="removeExperience">Supprimer</button>
-        `;
-        containerExp.appendChild(div);
-    });
-    containerExp.addEventListener("click", e => {
-        if (e.target.classList.contains("removeExperience")) e.target.parentElement.remove();
-    });
-
-    document.getElementById("addForm").addEventListener("submit", ajouterEmployer);
-});
+const STORAGE_KEY = "employees";
 
 
-// rendu des cartes  //
-function renderDetails() {
-    const serviceLists = document.getElementById("listCard");
-    serviceLists.innerHTML = "";
+let employees = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+let currentAssignRoom = null; 
 
-    dataEmployer.forEach((e, index) => {
-        const div = document.createElement("div");
-        div.classList.add("profil-card");
-        div.dataset.index = index;
-        div.dataset.assigned = "no"; // tracking
+/* telecharger employes mn local storage */
+function saveEmployees() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
+}
 
-        div.innerHTML = `
-            <div class="img-profil">
-                <img src="${e.photo}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
-            </div>
-            <div class="role">
-                <p>${e.firstname}</p>
-                <div class="role">${e.role}</div>
-            </div>
-            <button class="btn-remove">Remove</button>
-        `;
-        serviceLists.appendChild(div);
-    });
+function fullName(obj){
+  return `${obj.firstname || ""} ${obj.lastname || ""}`.trim();
+}
 
-    cardDetails();
-
+function placeholderPhoto(){
+  return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png";
 }
 
 
-//  function card details employer //
-function cardDetails() {
-    const cards = document.querySelectorAll(".profil-card");
-    const previewModal = document.getElementById("modalPreview");
-    const closeBtn = document.getElementById("closePreview");
 
-    cards.forEach(card => {
-        card.addEventListener("click", () => {
-            const index = card.dataset.index;
-            const emp = dataEmployer[index];
-            document.getElementById("previewPhoto").src = emp.photo;
-            document.getElementById("previewName").innerText = emp.firstname;
-            document.getElementById("previewRole").innerText = emp.role;
-            document.getElementById("previewEmail").innerText = emp.email;
-            document.getElementById("previewTele").innerText = emp.tele;
-            previewModal.style.display = "flex";
-        });
-    });
+/* Sidebar*/
+function renderSidebarUnassigned(){
+  const container = document.querySelector(".place-workers");
+  if(!container) return;
+  container.innerHTML = ""; 
 
+  const unassigned = employees.filter(e => !e.zone);
 
-    closeBtn.addEventListener("click", () => previewModal.style.display = "none");
-    previewModal.addEventListener("click", e => { 
-        if (e.target === previewModal) previewModal.style.display = "none"; 
-    });
+  if(unassigned.length === 0){
+    container.innerHTML = `<div class="p-4 text-center text-gray-500">No unassigned workers</div>`;
+    return;
+  }
+
+  unassigned.forEach(emp => {
+    const el = document.createElement("div");
+    el.className = "profil-card mb-3 flex items-center gap-3 p-2 bg-white/80 rounded shadow";
+    el.innerHTML = `
+      <div class="img-profil w-12 h-12 rounded-full bg-cover bg-center" style="background-image:url('${emp.photo || placeholderPhoto()}')"></div>
+      <div class="flex-1">
+        <p class="font-semibold text-sm preview-trigger" data-id="${emp.id}">${fullName(emp)}</p>
+        <div class="text-xs text-gray-500">${emp.role}</div>
+      </div>
+      <button class="btn-edit ml-2 px-2 py-1 text-xs bg-indigo-600 text-white rounded" data-id="${emp.id}">Preview</button>
+    `;
+    container.appendChild(el);
+  });
 }
