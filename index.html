@@ -1,196 +1,151 @@
+
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html >
+
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Workspace-Staff-Manager</title>
-    <link rel="stylesheet" href="style.css">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workshop Staff Manager</title>
+    <link rel="stylesheet" href="./assets/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
-<body class="bg-light-custom text-light-custom">
-    <div class="modal fade" id="assignWorker" tabindex="-1" aria-labelledby="assignWorkerLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="assignWorkerLabel">Edit Staff Assigned</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body edit_assigned_staff d-flex flex-column"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" form="assignWorkerForm" class="btn btn-success save_changes">Save Changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-  <div class="modal fade" id="editWorkerModal" tabindex="-1" aria-labelledby="editWorkerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+<body>
+    <main>
 
-        <div class="modal-header">
-          <h5 class="modal-title" id="editWorkerModalLabel">Edit Staff Profile</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-          <form id="editWorkerForm">
-
-            <label for="editWorkerName" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="editWorkerName" placeholder="Enter full name">
-
-            <label for="editWorkerRole" class="form-label mt-3">Role</label>
-            <select class="form-select" id="editWorkerRole">
-              <option disabled>Select a role</option>
-              <option value="manager">Manager</option>
-              <option value="receptionist">Receptionist</option>
-              <option value="it">IT Technician</option>
-              <option value="security">Security Agent</option>
-              <option value="cleaning">Cleaning</option>
-              <option value="other">Other</option>
-            </select>
-
-            <label for="editWorkerPhoto" class="form-label mt-3">Photo URL</label>
-            <input type="url" class="form-control" id="editWorkerPhoto" placeholder="https://example.com/photo.jpg">
-
-            <label for="editWorkerEmail" class="form-label mt-3">Email</label>
-            <input type="email" class="form-control" id="editWorkerEmail" placeholder="name@company.com">
-
-            <label for="editWorkerPhone" class="form-label mt-3">Phone</label>
-            <input type="tel" class="form-control" id="editWorkerPhone" placeholder="(123) 456-7890">
-
-            <div class="mb-3 mt-3">
-              <label class="form-label">Professional Background</label>
-              <div id="editExperienceList">
-                <div class="input-group mb-2">
-                  <input type="text" class="form-control" placeholder="Job Title, Company">
-                  <button class="btn btn-outline-danger" type="button">Delete</button>
+        <section class="workspace m-[30px] gap-5">
+            <div class="all-element-workspace grid gap-5 sm:flex lg:flex md:flex">
+                <div class="image-global border-2 border-white rounded-2xl overflow-hidden flex">
+                    <div class="all-roomes border w-full">
+                        <div class="box1 grid grid-cols-3 gap-2 border-2 border-red-300 hover:bg-green-600/30" id="salle-conference">
+                            <button type="button" class="btn-add-conference flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="box2 grid grid-cols-3 border-2 border-red-200 hover:bg-green-600/30" id="salle-serveurs">
+                            <button type="button" class="btn-add-serveurs flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="box3 grid grid-cols-3 bg-red-600/30 border-2 border-blue-200 hover:bg-red-600/60" id="salle-securite">
+                            <button type="button" class="btn-add-securite flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="box4 grid grid-cols-3 bg-red-600/30 border-2 border-blue-200 hover:bg-red-600/60" id="salle-reception">
+                            <button type="button" class="btn-add-reseption flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="box5 grid grid-cols-3 border-2 border-blue-200 hover:bg-green-600/30" id="salle-personnel">
+                            <button type="button" class="btn-add-personnel flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="box6 grid grid-cols-3 bg-red-600/30 border-2 border-blue-200 hover:bg-red-600/60" id="salle-archives">
+                            <button type="button" class="btn-add-archives flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <button type="button" class="btn btn-outline-primary w-100" id="editAddExperienceBtn">
-                Add Experience
-              </button>
-            </div>
-
-          </form>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" form="editWorkerForm" class="btn btn-success">Update Employee</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="employeeModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
-      <div class="modal-content">
-
-        <div class="modal-header border-0">
-          <h5 class="modal-title">Employee Profile</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="modal-body employeeProfile">
-        </div>
-
-        <div class="modal-footer d-flex flex-column gap-2 border-0">
-          <button class="btn btn-success w-100" data-bs-toggle="modal" id="editWorkerModalButton" data-bs-target="#editWorkerModal">Edit Profile</button>
-          <button class="btn btn-warning w-100">Remove from zone</button>
-          <button class="btn btn-danger w-100">Delete Employee</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="addWorkerModal" tabindex="-1" aria-labelledby="addWorkerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addWorkerModalLabel">Add New Staff</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="addWorkerForm">
-            <label for="workerName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="workerName" placeholder="Enter worker's full name">
-            <label for="workerRole" class="form-label">Role</label>
-            <select class="form-select" id="workerRole">
-              <option selected disabled>Select a role</option>
-              <option value="manager">Manager</option>
-              <option value="receptionist">Receptionist</option>
-              <option value="it">IT Technician</option>
-              <option value="security">Security Agent</option>
-              <option value="cleaning">Cleaning</option>
-              <option value="other">Other</option>
-            </select>
-
-            <label for="workerPhoto" class="form-label">Photo URL</label>
-            <input type="url" class="form-control" id="workerPhoto" placeholder="https://example.com/photo.jpg">
-            <label for="workerEmail" class="form-label">Email</label>
-            <input type="email" class="form-control" id="workerEmail" placeholder="name@company.com">
-
-            <label for="workerPhone" class="form-label">Phone</label>
-            <input type="tel" class="form-control" id="workerPhone" placeholder="(123) 456-7890">
-
-            <div class="experience_zone bg-light flex-column input-group-text m-2 p-2 rounded-2">
-              <label for="company" class="form-label">Company</label>
-              <input type="text" class="form-control company" name="company" placeholder="Experience">
-              <label for="role" class="form-label">Role</label>
-              <input type="text" class="form-control role" name="role" placeholder="Experience">
-              <label for="workerDuration" class="form-label">Duration</label>
-              <input type="text" class="form-control workerDuration" name="workerDuration" placeholder="Experience">
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Professional Background</label>
-              <div id="experienceList">
-                <div class="input-group mb-2">
-                  <input type="text" class="form-control" placeholder="Job Title, Company">
-                  <button class="btn btn-outline-danger" type="button">Delete</button>
+                <div
+                    class="bord-create p-2.5 rounded-[10px] bg-blue-100/10 text-center border-[3px] border-white w-full sm:w-[25%]">
+                    <h1 class="font-bold text-[20px] pb-5 text-white lg:text-[40px]">Unassigned Staff</h1>
+                    <button id="add-new-worker" class="pointer text-white bg-[#1301b6] p-2 rounded-xl font-bold text-[10px] lg:text-[20px]">Add New
+                        Worker</button>
+                    <div class="place-workers border mt-3 p-1 h-[70vh] sm:h-[59vh] lg:h-[380px] overflow-y-scroll [scrollbar-width:none]">
+                    </div>
                 </div>
-              </div>
-              <button type="button" class="btn btn-outline-primary w-100" id="addExperienceBtn">Add Experience</button>
             </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" form="addWorkerForm" class="btn btn-primary">Save Employee</button>
-        </div>
-      </div>
-    </div>
-  </div>
+        </section>
 
-  <div class="d-flex vh-100">
-    <aside class="d-flex flex-column p-3 border-end bg-card-light shadow-soft">
-      <div class="d-flex align-items-center mb-4 gap-3">
-        <h1 class="h5 mb-0">WorkSphere</h1>
-      </div>
+        <section
+            class="form-worker hidden flex justify-center py-6 items-center absolute place-self-center top-0 backdrop-blur w-full h-screen">
+            <form
+                class="form-inside w-full max-w-lg bg-white/80 rounded-2xl shadow-lg p-8 h-full overflow-y-scroll [scrollbar-width:none]"
+                id="staffForm" novalidate>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="flex flex-col">
+                        <span class="text-sm font-medium mb-2">Nom</span>
+                        <input name="nom" type="text" required placeholder="Ex: Oughlane"
+                            class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                            id="nom-worker" />
+                    </label>
 
-      <div class="mb-3">
-        <div class="input-group">
-          <span class="input-group-text bg-body border-end-0 text-muted-light"><i class="bi bi-search"></i></span>
-          <input type="text" class="form-control border-start-0" placeholder="Search staff...">
-        </div>
-      </div>
 
-      <div class="mb-3"><button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#addWorkerModal">+ Add New Staff</button></div>
+                    <label class="flex flex-col">
+                        <span class="text-sm font-medium mb-2">Prenom</span>
+                        <input name="prenom" type="text" required placeholder="Ex: mohammed"
+                            class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                            id="prenom-worker" />
+                    </label>
+                </div>
 
-      <div class="unassigned-employees flex-column overflow-auto">
-        <h6 class="text-muted-light mb-2">UNASSIGNED STAFF</h6>
-      </div>
-    </aside>
-    <main class="flex-fill p-2">
-      <div class="row g-3 vh-100">
-      </div>
+
+                <label class="flex flex-col mt-4">
+                    <span class="text-sm font-medium mb-2">E-mail</span>
+                    <input name="email" type="email" required placeholder="exemple@domaine.com"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        id="email-worker" />
+                </label>
+
+                <label class="flex flex-col mt-4">
+                    <span class="text-sm font-medium mb-2">Photo (URL)</span>
+                    <input id="imageUrl" name="image_url" type="url" placeholder="Ex: https://example.com/photo.jpg"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+                </label>
+
+                <div class="mt-4">
+                    <span class="text-sm font-medium mb-2">Apercu de l image</span>
+                    <div
+                        class="w-48 h-48 border rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                        <img id="imagePreview" src="" alt="Preview" class="object-cover w-full h-full hidden" />
+                        <span id="placeholderText" class="text-gray-400">image s affichera ici</span>
+                    </div>
+                </div>
+
+
+
+                <label class="flex flex-col mt-4">
+                    <span class="text-sm font-medium mb-2">Poste de travail</span>
+                    <select name="poste" required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        id="role-worker">
+                        <option value="">-- Choisir un poste --</option>
+                        <option value="it">Techniciens IT</option>
+                        <option value="manager">Manager</option>
+                        <option value="securite">Agents de securite</option>
+                        <option value="nettoyage">Nettoyage</option>
+                        <option value="reseption">Receptionnistes</option>
+                        <option value="autres">Autres roles</option>
+                    </select>
+                </label>
+
+                <section class="form-experience">
+
+                </section>
+
+                <div class="btn-add-experience flex justify-end mt-3">
+                    <button type="button"
+                        class="px-5 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-500">Ajouter
+                        Experience</button>
+                </div>
+
+
+                <div class="flex items-center justify-between mt-6">
+                    <button type="submit" id="form-sub"
+                        class="px-5 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">Enregistrer</button>
+                    <button type="reset" class="px-4 py-2 border rounded-lg">Reinitialiser</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="info-popup fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50 hidden">
+
+        </section>
+
+        <section class="section-workers fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50 hidden">
+            <div class=" bg-amber-200 w-96 rounded-2xl max-h-[80vh] overflow-y-auto [scrollbar-width:none]">
+                <i class="fas fa-x cursor-pointer m-3" id="close-showworkers"></i>
+                <div class="workers w-full grid grid-cols-1">
+                </div>
+            </div>
+        </section>
+
+
     </main>
-  </div>
-  <script src="source.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="source.js"></script>
 </body>
+
 </html>
