@@ -1,7 +1,6 @@
 let dataEmployer = [];
 let add_btn = document.getElementById("btn-add");
 
-
 document.addEventListener("DOMContentLoaded", () => {
 
     fetch("./data.json")
@@ -17,6 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("change", () => {
         photoModal.src = URL.createObjectURL(input.files[0]);
     });
+
+
 
     // ouvrir Modal dajout
     add_btn.addEventListener('click', () => {
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("addForm").addEventListener("submit", ajouterEmployer);
 });
 
+
 // rendu des cartes  //
 function renderDetails() {
     const serviceLists = document.getElementById("listCard");
@@ -75,6 +77,7 @@ function renderDetails() {
 
 }
 
+
 //  function card details employer //
 function cardDetails() {
     const cards = document.querySelectorAll(".profil-card");
@@ -93,6 +96,7 @@ function cardDetails() {
             previewModal.style.display = "flex";
         });
     });
+
 
     closeBtn.addEventListener("click", () => previewModal.style.display = "none");
     previewModal.addEventListener("click", e => { 
