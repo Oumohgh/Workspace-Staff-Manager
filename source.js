@@ -351,7 +351,7 @@ const mappingBtnToRoom = [
   {cls: "btn-add-conference", room: "conference"},
   {cls: "btn-add-serveurs", room: "serveurs"},
   {cls: "btn-add-securite", room: "securite"},
-  {cls: "btn-add-reseption", room: "reception"},
+  {cls: "btn-add-reception", room: "reception"},
   {cls: "btn-add-personnel", room: "personnel"},
   {cls: "btn-add-archives", room: "archives"}
 ];
