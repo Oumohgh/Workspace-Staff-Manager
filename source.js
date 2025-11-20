@@ -99,10 +99,10 @@ function renderRooms(){
   });
 }
 /* affiche modal mn preview */
-function showPreview(emp){
-  const popup = document.querySelector(".info-popup");
-  if(!popup) return;
-  popup.innerHTML = `
+function showModal(emp){
+  const modal = document.querySelector(".info-popup");
+  if(!modal) return;
+  modal.innerHTML = `
     <div class="bg-white rounded-lg p-4 w-80">
       <div class="flex justify-end"><button id="closePreview" class="text-xl">×</button></div>
       <div class="flex flex-col items-center gap-3">
@@ -122,8 +122,8 @@ function showPreview(emp){
       </div>
     </div>
   `;
-  popup.classList.remove("hidden");
-  popup.classList.add("flex");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
 }
 
 /*  show modal dial employes f kola room */
@@ -161,7 +161,6 @@ function openAssignModalFor(roomKey){
   modal.classList.remove("hidden");
 }
 
-
 function isAdmisForRoom(role, roomKey){
   // normalise role  bach matchi rols
   const r = (role || "").toLowerCase();
@@ -185,8 +184,6 @@ function isAdmisForRoom(role, roomKey){
   if(!allowed) return false;
   return allowed.includes(roomKey);
 }
-
-
 
 /* button jded 3la work form*/
 const addNewWorkerBtn = document.getElementById("add-new-worker");
@@ -229,7 +226,6 @@ imageUrlInput.addEventListener("input", (e)=>{
   }
 });
 
-
 const addExpBtn = document.querySelector(".btn-add-experience button") || document.querySelector(".btn-add-experience");
 const expContainer = document.querySelector(".form-experience");
 
@@ -257,7 +253,7 @@ document.addEventListener("click", (e)=>{
   }
 });
 
-/* form submit -> add employee object and persist */
+/* form submit -> aajouter employe */
 staffForm.addEventListener("submit", (ev)=>{
   ev.preventDefault();
 
@@ -318,7 +314,7 @@ document.addEventListener("click", (e)=>{
       emp = employees.find(x => fullName(x) === text);
     }
     if(emp){
-      showPreview(emp);
+      showModal(emp);
     }
   }
 
@@ -336,7 +332,6 @@ document.addEventListener("click", (e)=>{
     document.querySelector(".section-workers").classList.add("hidden");
   }
 
- 
   if(t.classList.contains("unassign-btn")){
     const wrapper = t.closest("[data-employee-id]");
     const id = wrapper ? wrapper.getAttribute("data-employee-id") : null;
@@ -351,7 +346,6 @@ document.addEventListener("click", (e)=>{
     }
   }
 });
-
 
 const mappingBtnToRoom = [
   {cls: "btn-add-conference", room: "conference"},
