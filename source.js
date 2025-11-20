@@ -1,160 +1,101 @@
-loadData();
+let dataEmployer = [];
+let add_btn = document.getElementById("btn-add");
 
 
-function loadData() {
-    let workerList = getDataFromLocalStorageIfExist("workers");
+document.addEventListener("DOMContentLoaded", () => {
 
-    renderCards(workerList);
-}
-
-
-function getDataFromLocalStorageIfExist(keyName) {
-    let oldData = localStorage.getItem(keyName);
-
-    if (oldData == null) {
-        loadJson("workers.json"); // JSON file like apprenant.json
-    }
-
-    oldData = localStorage.getItem(keyName);
-
-    return JSON.parse(oldData);
-}
-
-
-async function loadJson(file) {
-
-    let response = await fetch(file);
-    let data = await response.json();
-
-    let workerList = [];
-
-    if (data.length == undefined) {
-        workerList.push(data);
-    } else {
-        data.forEach(worker => workerList.push(worker));
-    }
-
-    saveToLocalStorage("workers", workerList);
-}
-
-
-function saveToLocalStorage(keyName, dataList) {
-    localStorage.setItem(keyName, JSON.stringify(dataList));
-}
-
-
-function renderCards(workerList) {
-    document.getElementById("cards").innerHTML = renderListView(workerList);
-}
-
-function renderListView(workerList) {
-    let cardList = "";
-    workerList.forEach(worker => {
-        cardList += renderCard(worker);
-    });
-    return cardList;
-}
-
-function renderCard(worker) {
-    return `
-        <div class="card border border-primary mb-3">
-            <div class="card-body row">
-
-                ${renderDetails(worker)}
-
-            </div>
-        </div>`;
-}
-
-function renderDetails(worker) {
-    return `
-        <div class="col-3">
-            <img src="${worker.photo}" class="img-thumbnail" alt="photo">
-        </div>
-
-        <div class="col-9">
-            <h5>${worker.name}</h5>
-            <p>${worker.role}</p>
-            <p>${worker.email}</p>
-
-            <button email="${worker.email}" class="btn btn-primary w-100 mb-2 edit" 
-                    data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-
-            <button email="${worker.email}" class="btn btn-danger w-100 delete">Delete</button>
-        </div>
-    `;
-}
-
-document.forms["addWorkerForm"].addEventListener("submit", event => {
-    event.preventDefault();
-
-    let form = event.target;
-
-    let worker = {
-        name: form.name.value,
-        role: form.role.value,
-        email: form.email.value,
-        phone: form.phone.value,
-        photo: form.photo.value,
-        experiences: []
-    };
-
-    for (let i = 0; i < form.expName.length; i++) {
-        worker.experiences.push({
-            name: form.expName[i].value,
-            duration: form.expDuration[i].value
+    fetch("./data.json")
+        .then(res => res.json())
+        .then(data => {
+            dataEmployer = JSON.parse(localStorage.getItem("employer")) || data;
+            renderDetails();
         });
-    }
 
-    addWorkerToLocalStorage(worker);
+    // Prévisualisation photo
+    const input = document.getElementById("file");
+    const photoModal = document.getElementById("photoModal");
+    input.addEventListener("change", () => {
+        photoModal.src = URL.createObjectURL(input.files[0]);
+    });
+
+    // Ouvrir Modal d'ajout
+    add_btn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) this.style.display = 'none';
+        });
+    });
+
+    // Ajouter experiences dynamiques
+    const containerExp = document.getElementById("experiencesContainer");
+    const addExpBtn = document.getElementById("addExperienceBtn");
+    addExpBtn.addEventListener("click", () => {
+        const div = document.createElement("div");
+        div.classList.add("experience");
+        div.innerHTML = `
+            <input type="text" name="poste[]" placeholder="Poste">
+            <input type="text" name="duree[]" placeholder="Durée">
+            <input type="text" name="description[]" placeholder="Description">
+            <button type="button" class="removeExperience">Supprimer</button>
+        `;
+        containerExp.appendChild(div);
+    });
+    containerExp.addEventListener("click", e => {
+        if (e.target.classList.contains("removeExperience")) e.target.parentElement.remove();
+    });
+
+    document.getElementById("addForm").addEventListener("submit", ajouterEmployer);
 });
 
-function addWorkerToLocalStorage(worker) {
-    let workerList = getDataFromLocalStorageIfExist("workers");
+// === Rendu des cartes === //
+function renderDetails() {
+    const serviceLists = document.getElementById("listCard");
+    serviceLists.innerHTML = "";
 
-    workerList.push(worker);
+    dataEmployer.forEach((e, index) => {
+        const div = document.createElement("div");
+        div.classList.add("profil-card");
+        div.dataset.index = index;
+        div.dataset.assigned = "no"; // tracking
 
-    saveToLocalStorage("workers", workerList);
+        div.innerHTML = `
+            <div class="img-profil">
+                <img src="${e.photo}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+            </div>
+            <div class="role">
+                <p>${e.firstname}</p>
+                <div class="role">${e.role}</div>
+            </div>
+            <button class="btn-remove">Remove</button>
+        `;
+        serviceLists.appendChild(div);
+    });
+
+    cardDetails();
+
 }
 
+//  function card details emoyer  //
+function cardDetails() {
+    const cards = document.querySelectorAll(".profil-card");
+    const previewModal = document.getElementById("modalPreview");
+    const closeBtn = document.getElementById("closePreview");
 
-document.addEventListener("click", event => {
-    if (event.target.classList.contains("edit")) {
-        let email = event.target.getAttribute("email");
-        loadDataToModalEdit(email);
-    }
-});
+    cards.forEach(card => {
+        card.addEventListener("click", () => {
+            const index = card.dataset.index;
+            const emp = dataEmployer[index];
+            document.getElementById("previewPhoto").src = emp.photo;
+            document.getElementById("previewName").innerText = emp.firstname;
+            document.getElementById("previewRole").innerText = emp.role;
+            document.getElementById("previewEmail").innerText = emp.email;
+            document.getElementById("previewTele").innerText = emp.tele;
+            previewModal.style.display = "flex";
+        });
+    });
 
-function loadDataToModalEdit(email) {
-    let workerList = getDataFromLocalStorageIfExist("workers");
-
-    let worker = workerList.find(w => w.email == email);
-
-    let form = document.forms["editWorkerForm"];
-
-    form.name.value = worker.name;
-    form.role.value = worker.role;
-    form.email.value = worker.email;
+    closeBtn.addEventListener("click", () => previewModal.style.display = "none");
+    previewModal.addEventListener("click", e => { 
+        if (e.target === previewModal) previewModal.style.display = "none"; 
+    });
 }
-
-
-document.forms["editWorkerForm"].addEventListener("submit", event => {
-    event.preventDefault();
-
-    let form = event.target;
-
-    let workerList = getDataFromLocalStorageIfExist("workers");
-
-    let worker = workerList.find(w => w.email == form.email.value);
-
-    worker.name = form.name.value;
-    worker.role = form.role.value;
-
-    for (let i = 0; i < workerList.length; i++) {
-        if (workerList[i].email == form.email.value) {
-            workerList[i] = worker;
-        }
-    }
-
-    saveToLocalStorage("workers", workerList);
-});

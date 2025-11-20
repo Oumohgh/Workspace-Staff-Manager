@@ -1,0 +1,9 @@
+[
+    {
+        "firstname": "mohammed",
+        "role": "get",
+        "email": "mohammed@gmail.com",
+        "tele": "0620020908",
+        "photo": "./assets/profile.png"
+    }
+]
