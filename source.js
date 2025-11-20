@@ -1,6 +1,6 @@
 
 const ROOM_IDS = {
-  reception: "salle-reseption",
+  reception: "salle-reception",
   serveurs: "salle-serveurs",
   securite: "salle-securite",
   personnel: "salle-personnel",
@@ -8,13 +8,13 @@ const ROOM_IDS = {
   conference: "salle-conference"
 };
 
-
+ 
 const ROLE_RULES = { //rroms m allowed
   it: ["serveurs"],
   securite: ["securite"],
   reception: ["reception"],
   manager: ["reception","serveurs","securite","personnel","archives","conference"],
-  nettoyage: ["reception","serveurs","securite","personnel","conference"], // not archives
+  nettoyage: ["reception","serveurs","securite","personnel","conference"], // noot allowed to archive
   autres: ["reception","serveurs","securite","personnel","conference","archives"]
 };
 
@@ -171,9 +171,9 @@ function isAdmisForRoom(role, roomKey){
     "agents de securite": "securite",
     "agent": "securite",
     "securite": "securite",
-    "receptionnistes": "reseption",
-    "receptionniste": "reseption",
-    "reseption": "reseption",
+    "receptionnistes": "reception",
+    "receptionniste": "reception",
+    "reception": "reception",
     "manager": "manager",
     "nettoyage": "nettoyage",
     "autres": "autres",
