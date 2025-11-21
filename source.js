@@ -200,6 +200,14 @@ function renderZones() {
   });
 }
 
+function setError(node, msg) {
+  node.textContent = msg || "";
+}
+
+function validateField(field, value) {
+  const fn = validators[field];
+  return fn ? fn(value) : true;
+}
 
 
 
@@ -211,35 +219,6 @@ function renderZones() {
   
 
 //dd///
-
-
-
-/* button aded 3la work form*/
-const addNewWorkerBtn = document.getElementById("add-new-worker");
-const formAffichageEmploye = document.querySelector(".form-worker");
-const staffForm = document.getElementById("staffForm");
-const imageUrlInput = document.getElementById("imageUrl");
-const imagePreview = document.getElementById("imagePreview");
-const placeholderText = document.getElementById("placeholderText");
-
-if(addNewWorkerBtn){
-  addNewWorkerBtn.addEventListener("click", ()=> {
-    formAffichageEmploye.classList.remove("hidden");
-    formAffichageEmploye.classList.add("flex");
-  });
-}
-
-
-staffForm.addEventListener("reset", ()=> {
-  formAffichageEmploye.classList.add("hidden");
-  formAffichageEmploye.classList.remove("flex");
-//cleari img
-  imagePreview.src = "";
-  imagePreview.classList.add("hidden");
-  placeholderText.classList.remove("hidden");
- // clear exp
-  document.querySelector(".form-experience").innerHTML = "";
-});
 
 
 imageUrlInput.addEventListener("input", (e)=>{
@@ -403,14 +382,3 @@ if(closeShowWorkers){
     document.querySelector(".section-workers").classList.add("hidden");
   });
 }
-
-/* Assign b id*/
-function assignToRoomById(empId, roomKey){
-  const emp = employees.find(x => x.id === empId);
-  if(!emp) return;
-
-  // filt
-  if(!isAdmisForRoom(emp.role, roomKey)){
-    alert("This employee role is not allowed in this room.");
-    return;
-  }
