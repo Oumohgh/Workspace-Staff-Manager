@@ -210,175 +210,19 @@ function validateField(field, value) {
 }
 
 
-
-
-  
-
-  
-    
-  
-
 //dd///
 
 
-imageUrlInput.addEventListener("input", (e)=>{
-  const url = e.target.value.trim();
-  if(url){
-    imagePreview.src = url;
-    imagePreview.classList.remove("hidden");
-    placeholderText.classList.add("hidden");
-  } else {
-    imagePreview.src = "";
-    imagePreview.classList.add("hidden");
-    placeholderText.classList.remove("hidden");
-  }
-});
+function createExperienceBlock(data = {}) {
+  const div = document.createElement("div");
+  div.className = "exp-block border p-2 rounded bg-white/80 flex flex-col gap-2";
 
-const addExpBtn = document.querySelector(".btn-add-experience button") || document.querySelector(".btn-add-experience");
-const expContainer = document.querySelector(".form-experience");
+  div.innerHTML = `
+    <input class="exp-company border p-1 rounded" placeholder="Entreprise" value="${data.company || ""}">
+    <input class="exp-role border p-1 rounded"     placeholder="Rôle"       value="${data.role || ""}">
+    <input class="exp-duration border p-1 rounded" placeholder="Durée"      value="${data.duration || ""}">
+    <button type="button" class="remove-exp px-2 py-1 bg-red-200 rounded self-end">Supprimer</button>
+  `;
 
-if(addExpBtn){
-  addExpBtn.addEventListener("click", ()=> {
-    const block = document.createElement("div");
-    block.className = "mb-3 exp-block border p-3 rounded bg-white/70";
-    block.innerHTML = `
-      <label class="block text-sm mb-1">Entreprise:</label>
-      <input class="w-full px-3 py-2 border rounded mb-2 exp-company" type="text">
-      <label class="block text-sm mb-1">Role:</label>
-      <input class="w-full px-3 py-2 border rounded mb-2 exp-role" type="text">
-      <label class="block text-sm mb-1">Date de  entree:</label>
-      <input class="w-full px-3 py-2 border rounded mb-2 exp-role" type="text">
-      <label class="block text-sm mb-1">Date de sortie:</label>
-      <input class="w-full px-3 py-2 border rounded mb-2 exp-duration" type="text">
-      <div class="text-right"><button type="button" class="remove-exp inline-block px-3 py-1 text-sm bg-red-500 text-white rounded">Supprimer</button></div>
-    `;
-    expContainer.appendChild(block);
-  });
-}
-
-/* remove  blocks dial exper */
-document.addEventListener("click", (e)=>{
-  if(e.target.classList.contains("remove-exp")){
-    e.target.closest(".exp-block").remove();
-  }
-});
-
-/* form submit -> aajouter employe */
-staffForm.addEventListener("submit", (ev)=>{
-  ev.preventDefault();
-
-  const firstname = document.getElementById("nom-worker").value.trim();
-  const lastname  = document.getElementById("prenom-worker").value.trim();
-  const email     = document.getElementById("email-worker").value.trim();
-  const imageUrl  = document.getElementById("imageUrl").value.trim() || placeholderPhoto();
-  const role      = document.getElementById("role-worker").value || "autres";
-
-  const newEmp = {
-    id:idcount,// crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
-    firstname,
-    lastname,
-    email,
-    tele: "", // not present in this form
-    photo: imageUrl,
-    role,
-    experiences: [],
-    zone: null
-  };
-
-  // collect experiences
-  document.querySelectorAll(".exp-block").forEach(b => {
-    newEmp.experiences.push({
-      company: b.querySelector(".exp-company")?.value || "",
-      role: b.querySelector(".exp-role")?.value || "",
-      duration: b.querySelector(".exp-duration")?.value || ""
-    });
-  });
-
-  employees.push(newEmp);
-  saveEmployees();
-
-
-  staffForm.reset();
-  document.querySelector(".form-experience").innerHTML = "";
-  formAffichageEmploye.classList.add("hidden");
-  formAffichageEmploye.classList.remove("flex");
-  imagePreview.src = "";
-  imagePreview.classList.add("hidden");
-  placeholderText.classList.remove("hidden");
-
-  // update stylee
-  renderSidebarUnassigned();
-  renderRooms();
-});
-
-
-document.addEventListener("click", (e)=>{
-  const t = e.target;
-  if(t.matches(".preview-trigger") || t.closest(".preview-trigger") || t.classList.contains("btn-edit")){
-    
-    const id = t.getAttribute("data-id") || t.closest("[data-id]")?.getAttribute("data-id") || t.getAttribute("data-id");
-    let emp = employees.find(x => x.id === id);
-    if(!emp){
-    
-      const text = t.textContent?.trim();
-      emp = employees.find(x => fullName(x) === text);
-    }
-    if(emp){
-      showModal(emp);
-    }
-  }
-
-  // 
-  if(t.id === "closePreview" || t.id === "closePreview2"){
-    document.querySelector(".info-popup").classList.add("hidden");
-    document.querySelector(".info-popup").classList.remove("flex");
-  }
-
-  
-  if(t.classList.contains("assign-btn")){
-    const id = t.getAttribute("data-id");
-    assignToRoomById(id, currentAssignRoom);
-   
-    document.querySelector(".section-workers").classList.add("hidden");
-  }
-
-  if(t.classList.contains("unassign-btn")){
-    const wrapper = t.closest("[data-employee-id]");
-    const id = wrapper ? wrapper.getAttribute("data-employee-id") : null;
-    if(id){
-      const emp = employees.find(x => x.id === id);
-      if(emp){
-        emp.zone = null;
-        saveEmployees();
-        renderSidebarUnassigned();
-        renderRooms();
-      }
-    }
-  }
-});
-
-const mappingBtnToRoom = [
-  {cls: "btn-add-conference", room: "conference"},
-  {cls: "btn-add-serveurs", room: "serveurs"},
-  {cls: "btn-add-securite", room: "securite"},
-  {cls: "btn-add-reception", room: "reception"},
-  {cls: "btn-add-personnel", room: "personnel"},
-  {cls: "btn-add-archives", room: "archives"}
-];
-
-mappingBtnToRoom.forEach(m => {
-  document.querySelectorAll("."+m.cls).forEach(btn => {
-    btn.addEventListener("click", ()=>{
-      currentAssignRoom = m.room;
-      openAssignModalFor(m.room);
-    });
-  });
-});
-
-
-const closeShowWorkers = document.getElementById("close-showworkers");
-if(closeShowWorkers){
-  closeShowWorkers.addEventListener("click", ()=> {
-    document.querySelector(".section-workers").classList.add("hidden");
-  });
+  return div;
 }
