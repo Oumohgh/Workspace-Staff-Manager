@@ -77,11 +77,11 @@ span {
 }
 
 .zone-empty {
-  background-color: rgba(249, 175, 175, 0.6) !important; /* rouge pâle */
+  background-color: rgba(249, 175, 175, 0.6) !important; /* rouge pale */
 }
 
 
-/* MOBILE : max-width 768px */
+/* mobile:max-width 768px */
 @media screen and (max-width: 768px) {
 
   main {
@@ -90,7 +90,7 @@ span {
     gap: 10px;
     padding: 10px;
 
-    /* Grille simple et lisible en mobile */
+    
     /* grid-template-areas:
       "zone-conference"
       "zone-reception"
