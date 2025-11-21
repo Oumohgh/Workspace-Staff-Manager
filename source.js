@@ -168,7 +168,38 @@ function renderZones() {
       labelEl.textContent = `${labelTxt} (${occupants.length}/${capacity})`;
     }
 
-  
+  /* liste de occupants */
+    occupants.forEach(emp => {
+      const div = document.createElement("div");
+      div.className = "flex items-center gap-2 p-2 bg-white/90 rounded shadow-sm";
+      div.setAttribute("data-employee-id", emp.id);
+
+      div.innerHTML = `
+        <img class="w-10 h-10 rounded-full cursor-pointer preview-trigger"
+             src="${emp.photo || placeholderPhoto()}" data-id="${emp.id}">
+
+        <div class="flex-1">
+          <div class="text-sm preview-trigger" data-id="${emp.id}">
+            ${fullName(emp)}
+          </div>
+          <div class="text-xs text-gray-500">${emp.role}</div>
+        </div>
+
+        <button class="unassign-btn px-2 py-1 text-sm bg-red-100 rounded"
+                data-id="${emp.id}">
+          X
+        </button>
+      `;
+
+      occupantsEl.appendChild(div);
+    });
+
+    if (occupants.length === 0) {
+      occupantsEl.innerHTML = `<div class="text-gray-500 p-2 text-sm">Aucun occupant</div>`;
+    }
+  });
+}
+
 
 
 
@@ -180,29 +211,8 @@ function renderZones() {
   
 
 //dd///
-function isAdmisForRoom(role, roomKey){
-  // normalise role  bach matchi rols
-  const r = (role || "").toLowerCase();
-  const ruleKey = {
-    "techniciens it": "it",
-    "it": "it",
-    "technicien": "it",
-    "agents de securite": "securite",
-    "agent": "securite",
-    "securite": "securite",
-    "receptionnistes": "reception",
-    "receptionniste": "reception",
-    "reception": "reception",
-    "manager": "manager",
-    "nettoyage": "nettoyage",
-    "autres": "autres",
-    "autre": "autres"
-  }[r] || r;
 
-  const allowed = roleZones[ruleKey];
-  if(!allowed) return false;
-  return allowed.includes(roomKey);
-}
+
 
 /* button aded 3la work form*/
 const addNewWorkerBtn = document.getElementById("add-new-worker");
