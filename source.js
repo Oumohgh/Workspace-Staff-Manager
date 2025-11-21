@@ -8,7 +8,7 @@ const ROOM_IDS = {
 };
 
  
-const ROLE_RULES = { //rroms m allowed
+const roleZones = { //rroms m allowed
   it: ["serveurs"],
   securite: ["securite"],
   reception: ["reception"],
@@ -176,12 +176,12 @@ function isAdmisForRoom(role, roomKey){
     "autre": "autres"
   }[r] || r;
 
-  const allowed = ROLE_RULES[ruleKey];
+  const allowed = roleZones[ruleKey];
   if(!allowed) return false;
   return allowed.includes(roomKey);
 }
 
-/* button jded 3la work form*/
+/* button aded 3la work form*/
 const addNewWorkerBtn = document.getElementById("add-new-worker");
 const formAffichageEmploye = document.querySelector(".form-worker");
 const staffForm = document.getElementById("staffForm");
@@ -230,11 +230,13 @@ if(addExpBtn){
     const block = document.createElement("div");
     block.className = "mb-3 exp-block border p-3 rounded bg-white/70";
     block.innerHTML = `
-      <label class="block text-sm mb-1">Entreprise</label>
+      <label class="block text-sm mb-1">Entreprise:</label>
       <input class="w-full px-3 py-2 border rounded mb-2 exp-company" type="text">
-      <label class="block text-sm mb-1">Role</label>
+      <label class="block text-sm mb-1">Role:</label>
       <input class="w-full px-3 py-2 border rounded mb-2 exp-role" type="text">
-      <label class="block text-sm mb-1">Durée</label>
+      <label class="block text-sm mb-1">Date de  entree:</label>
+      <input class="w-full px-3 py-2 border rounded mb-2 exp-role" type="text">
+      <label class="block text-sm mb-1">Date de sortie:</label>
       <input class="w-full px-3 py-2 border rounded mb-2 exp-duration" type="text">
       <div class="text-right"><button type="button" class="remove-exp inline-block px-3 py-1 text-sm bg-red-500 text-white rounded">Supprimer</button></div>
     `;
