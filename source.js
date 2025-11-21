@@ -60,6 +60,7 @@ function loadEmployees() {
 // Sauvegarder
 function saveEmployees() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
+  //console.log(1);
 }
 //DD
 // Normaliser le rle
@@ -72,18 +73,14 @@ function getRoleKey(rawLabel) {
   const r = normalizeRoleLabel(rawLabel);
   return ROLE_MAP[r] || r;
 }
+const validators = {
+  firstname: v => /^[A-Za-z À-ÖØ-öø-ÿ'’-]{2,40}$/.test(v.trim()),
+  lastname:  v => /^[A-Za-z À-ÖØ-öø-ÿ'’-]{0,40}$/.test(v.trim()),
+  email:     v => v.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+  phone:     v => v.trim() === "" || /^\+?[0-9 ()\-]{6,20}$/.test(v.trim()),
+  photo:     v => v.trim() === "" || /^(https?:\/\/.+\.(jpg|jpeg|png|webp|gif))$/i.test(v.trim())
+};
 //dd//
-/* Render emp
-   Display  img +smia*/
-function renderRooms(){
-  // clear room children except the + button
-  Object.values(ROOM_IDS).forEach(roomId => {
-    const roomEl = document.getElementById(roomId);
-    if(!roomEl) return;
-    // Supprime les cartes de emp li kaynen mais garder les boutons
-    
-    Array.from(roomEl.querySelectorAll("[data-employee-id]")).forEach(n=>n.remove());
-  });
 
   // place employes f rooms
   employees.filter(e => e.zone).forEach(emp => {
