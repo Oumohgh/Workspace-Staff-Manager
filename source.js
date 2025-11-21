@@ -47,12 +47,12 @@ function placeholderPhoto() {
   return "./assets/profile.png";
 }
 
-// Nom complet
+// melange nom
 function fullName(emp) {
   return `${emp.firstname || ""} ${emp.lastname || ""}`.trim();
 }
 
-// Charger les employes depuis LocalStorage
+// Charger employes mn LocalStorage
 function loadEmployees() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 }
@@ -62,6 +62,11 @@ function saveEmployees() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
 }
 //DD
+// Normaliser le rle
+function normalizeRoleLabel(raw) {
+  if (!raw) return "autres";
+  return (raw || "").toLowerCase().trim();
+}//maju et minis traiti meme maniere
 
 
 
