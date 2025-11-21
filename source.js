@@ -19,7 +19,7 @@ const ROOM_IDS = {
   archives: "zone-archives"
 };
 
-/// 
+
 const roleZones = {
   it: ["serveurs"],
   securite: ["securite"],
@@ -42,21 +42,28 @@ const ROLE_MAP = {
   "autre": "autres",
   "autres": "autres"
 };
-//
 
+function placeholderPhoto() {
+  return "./assets/profile.png";
+}
 
-/* telecharger employes mn local storage */
+// Nom complet
+function fullName(emp) {
+  return `${emp.firstname || ""} ${emp.lastname || ""}`.trim();
+}
+
+// Charger les employes depuis LocalStorage
+function loadEmployees() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+}
+
+// Sauvegarder
 function saveEmployees() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
 }
+//DD
 
-function fullName(obj){
-  return `${obj.firstname || ""} ${obj.lastname || ""}`.trim();
-}
 
-function placeholderPhoto(){
-  return "./assets/profile.png";
-}
 
 /* Sidebar*/
 function renderSidebarUnassigned(){
