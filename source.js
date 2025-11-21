@@ -1,44 +1,29 @@
-loadDataEmplyer();
+const STORAGE_KEY = "employees1";
 
-function loadDataEmplyer() {
-      let employerList = getDataEmployersFromLocalStorageIfExist("employers");
-      console.log(employerList);
-      renderCardsEmplyers(employerList);
-}
+const ZONE_CAPACITY = {
+  conference: 4,
+  reception: 4,
+  serveurs: 4,
+  securite: 4,
+  personnel: 4,
+  archives: 2
+};
 
-function getDataEmployersFromLocalStorageIfExist(keyData) {
-      let oldData = localStorage.getItem(keyData); 
-      if (oldData == null || oldData == undefined)
-      loadDataJson("../data/employe.json");
-      oldData = localStorage.getItem(keyData);
-      return JSON.parse(oldData);
-}
+const ROOM_IDS = {
+  conference: "zone-conference",
+  reception: "zone-reception",
+  serveurs: "zone-serveurs",
+  securite: "zone-securite",
+  personnel: "zone-personnel",
+  archives: "zone-archives"
+};
 
-async function loadDataJson(file) {
-      let responce = await fetch(file);
-      let newData = await responce.json();
-      let employerList = [];
-      if (newData.length == undefined) {
-      
-      employerList.push(newData);
-      } else {
-     
-      newData.forEach((employer) => {
-            employerList.push(employer);
-      });
-      }
-      saveDataEmployerToLocalStorage("employers", employerList);
-}
-
-function saveDataEmployerToLocalStorage(keyData, dataList) {
-      localStorage.setItem(keyData, JSON.stringify(dataList));
-}
-
-
-function displayUnassignedEmployeesList(assignedEmployee) {
-    return`    
-        <div class="d-flex gap-5 g-5 assignedEmployeesCheckbox">
-            <input type="checkbox" class="checkbox" name="${assignedEmployee.name}" room="${currentRoomName}">${assignedEmployee.name}
-        </div>
-    `
-}
+/* Rôles compatibles -> zones autorisées */
+const roleZones = {
+  it: ["serveurs"],
+  securite: ["securite"],
+  reception: ["reception"],
+  manager: ["reception","serveurs","securite","personnel","archives","conference"],
+  nettoyage: ["reception","serveurs","securite","personnel","conference"],
+  autres: ["reception","serveurs","securite","personnel","conference","archives"]
+};
