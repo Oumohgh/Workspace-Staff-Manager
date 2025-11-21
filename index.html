@@ -1,151 +1,171 @@
-
 <!DOCTYPE html>
-<html >
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Workshop Staff Manager</title>
-    <link rel="stylesheet" href="./assets/style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+  <meta charset="UTF-8" >
+  <title>Worspace Staff Manager</title>
+
+ 
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./assets/style.css">
+
+  <style>
+    .required-empty {
+      background-color: #ffe2e2 !important;
+    }
+  </style>
 </head>
 
-<body class="">
-    <main>
+<body class="bg-white min-h-screen flex flex-col md:flex-row">
 
-        <section class="workspace m-[30px] gap-5">
-            <div class="all-element-workspace grid gap-5 sm:flex lg:flex md:flex">
-                <div class="image-global border-2 border-white rounded-2xl overflow-hidden flex">
-                    <div class="all-roomes border w-full">
-                        <div class="box1 grid grid-cols-3 gap-2 border-2 border-red-300 hover:bg-green-600/30" id="salle-conference">
-                            <button type="button" class="btn-add-conference flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="box2 grid grid-cols-3 border-2 border-red-200 hover:bg-green-600/30" id="salle-serveurs">
-                            <button type="button" class="btn-add-serveurs flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="box3 grid grid-cols-3 bg-red-600/30 border-2 border-blue-200 hover:bg-red-600/60" id="salle-securite">
-                            <button type="button" class="btn-add-securite flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="box4 grid grid-cols-3 bg-red-600/30 border-2 border-blue-200 hover:bg-red-600/60" id="salle-reception">
-                            <button type="button" class="btn-add-reseption flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="box5 grid grid-cols-3 border-2 border-blue-200 hover:bg-green-600/30" id="salle-personnel">
-                            <button type="button" class="btn-add-personnel flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="box6 grid grid-cols-3 bg-red-600/30 border-2 border-blue-200 hover:bg-red-600/60" id="salle-archives">
-                            <button type="button" class="btn-add-archives flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-2xl font-bold shadow m-3 hover:bg-green-500"><i class="fas fa-plus"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="bord-create p-2.5 rounded-[10px] bg-blue-100/10 text-center border-[3px] border-white w-full sm:w-[25%]">
-                    <h1 class="font-bold text-[20px] pb-5 text-white lg:text-[40px]">Unassigned Staff</h1>
-                    <button id="add-new-worker" class="pointer text-white bg-[#1301b6] p-2 rounded-xl font-bold text-[10px] lg:text-[20px]">Add New
-                        Worker</button>
-                    <div class="place-workers border mt-3 p-1 h-[70vh] sm:h-[59vh] lg:h-[380px] overflow-y-scroll [scrollbar-width:none]">
-                    </div>
-                </div>
-            </div>
-        </section>
+  <!-- Sidebar -->
+  <aside class="w-full md:w-72 bg-gray-100 p-4 border-b md:border-r flex flex-col md:h-screen md:sticky md:top-0">
+    <h2 class="text-xl font-bold mb-3">Unassigned Staff</h2>
 
-        <section
-            class="form-worker hidden flex justify-center py-6 items-center absolute place-self-center top-0 backdrop-blur w-full h-screen">
-            <form
-                class="form-inside w-full max-w-lg bg-white/80 rounded-2xl shadow-lg p-8 h-full overflow-y-scroll [scrollbar-width:none]"
-                id="staffForm" novalidate>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label class="flex flex-col">
-                        <span class="text-sm font-medium mb-2">Nom</span>
-                        <input name="nom" type="text" required placeholder="Ex: Oughlane"
-                            class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                            id="nom-worker" />
-                    </label>
+    <ul id="unassignedList" class="flex flex-col gap-2"></ul>
+
+    <button id="openAddModal" class="mt-4 bg-blue-600 text-white py-2 rounded hover:scale-105 transition-transform duration-150">
+      Add New Worker
+    </button>
+  </aside>
 
 
-                    <label class="flex flex-col">
-                        <span class="text-sm font-medium mb-2">Prenom</span>
-                        <input name="prenom" type="text" required placeholder="Ex: mohammed"
-                            class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                            id="prenom-worker" />
-                    </label>
-                </div>
+  <main class="relative flex-1 p-2 md:p-4">
+
+    <!-- Zones positionn -->
+    <div id="zone-conference" class=" rounded shadow flex flex-col justify-center items-center">
+      <div class="zone-occupants flex flex-col gap-1"></div>
+      <div class="flex flex-col items-center">
+        <span class="font-bold text-x zone-label">Conference</span>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="conference">+</button>
+      </div>
+
+    </div>
 
 
-                <label class="flex flex-col mt-4">
-                    <span class="text-sm font-medium mb-2">E-mail</span>
-                    <input name="email" type="email" required placeholder="exemple@domaine.com"
-                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                        id="email-worker" />
-                </label>
+    <div id="zone-reception" class="rounded shadow flex flex-col justify-center items-center">
+      <div class="flex flex-col items-center mb-2">
+        <span class="font-bold text-x zone-label">Reception</span>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="reception">+</button>
+      </div>
+      <div class="zone-occupants flex flex-col gap-1"></div>
+    </div>
 
-                <label class="flex flex-col mt-4">
-                    <span class="text-sm font-medium mb-2">Photo (URL)</span>
-                    <input id="imageUrl" name="image_url" type="url" placeholder="Ex: https://example.com/photo.jpg"
-                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300" />
-                </label>
+    <div id="zone-serveurs" class=" rounded shadow flex flex-col justify-center items-center">
+      <div class="flex flex-col items-center mb-2">
+        <span class="font-bold text-x zone-label">Serveurs</span>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="serveurs">+</button>
+      </div>
+      <div class="zone-occupants flex flex-col gap-1"></div>
+    </div>
 
-                <div class="mt-4">
-                    <span class="text-sm font-medium mb-2">Apercu de l image</span>
-                    <div
-                        class="w-48 h-48 border rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                        <img id="imagePreview" src="" alt="Preview" class="object-cover w-full h-full hidden" />
-                        <span id="placeholderText" class="text-gray-400">image s affichera ici</span>
-                    </div>
-                </div>
+    <div id="zone-securite" class=" rounded shadow flex flex-col justify-center items-center">
+      <div class="flex flex-col items-center mb-2">
+        <span class="font-bold text-x zone-label">Securite</span>
+        <button class="zone-plus text-blue-700 font-bold text-4xl" data-zone="securite">+</button>
+      </div>
+      <div class="zone-occupants flex flex-col gap-1"></div>
+    </div>
 
+    <div id="zone-personnel" class=" rounded shadow flex flex-col justify-center items-center">
+      <div class="flex flex-col items-center mb-2">
+        <span class="font-bold text-x zone-label">Personnel</span>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="personnel">+</button>
+      </div>
+      <div class="zone-occupants flex flex-col gap-1"></div>
+    </div>
 
+    <div id="zone-archives" class="rounded shadow flex flex-col justify-center items-center">
+      <div class="flex flex-col items-center mb-2">
+        <span class="font-bold text-x zone-label">Archives</span>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="archives">+</button>
+      </div>
+      <div class="zone-occupants flex flex-col gap-1"></div>
+    </div>
 
-                <label class="flex flex-col mt-4">
-                    <span class="text-sm font-medium mb-2">Poste de travail</span>
-                    <select name="poste" required
-                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                        id="role-worker">
-                        <option value="">-- Choisir un poste --</option>
-                        <option value="it">Techniciens IT</option>
-                        <option value="manager">Manager</option>
-                        <option value="securite">Agents de securite</option>
-                        <option value="nettoyage">Nettoyage</option>
-                        <option value="reception">Receptionnistes</option>
-                        <option value="autres">Autres roles</option>
-                    </select>
-                </label>
-
-                <section class="form-experience">
-
-                </section>
-
-                <div class="btn-add-experience flex justify-end mt-3">
-                    <button type="button"
-                        class="px-5 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-500">Ajouter
-                        Experience</button>
-                </div>
+  </main>
 
 
-                <div class="flex items-center justify-between mt-6">
-                    <button type="submit" id="form-sub"
-                        class="px-5 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">Enregistrer</button>
-                    <button type="reset" class="px-4 py-2 border rounded-lg">Reinitialiser</button>
-                </div>
-            </form>
-        </section>
+  <!-- modal ajout modal-->
+  <div id="addModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 fade-in max-h-[90vh] overflow-auto">
+      <h2 class="text-xl font-semibold mb-3">Ajouter un employe</h2>
+      <form id="addEmployeeForm" class="space-y-3">
+        <div>
+          <label class="text-sm">Nom</label>
+          <input id="name" required class="w-full border p-2 rounded mt-1" >
+          <p id="err-name" class="text-red-600 text-sm mt-1"></p>
+        </div>
+        <div>
+          <label class="text-sm">Role</label>
+          <select id="role" required class="w-full border p-2 rounded mt-1">
+            <option value="">-- Choisir un role --</option>
+            <option>Receptionniste</option>
+            <option>Technicien IT</option>
+            <option>Agent de sécurité</option>
+            <option>Manager</option>
+            <option>Nettoyage</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm">Photo (URL)</label>
+          <input id="photo" type="url" class="w-full border p-2 rounded mt-1" >
+          <p id="err-photo" class="text-red-600 text-sm mt-1"></p>
+          
+          <img id="preview" class="w-24 h-24 object-cover rounded mt-2 hidden" alt="photo url" >
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-sm">Email</label>
+            <input id="email" type="email" class="w-full border p-2 rounded mt-1" >
+            <p id="err-email" class="text-red-600 text-sm mt-1"></p>
+          </div>
+          <div>
+            <label class="text-sm">Telephone</label>
+            <input id="phone" type="tel" class="w-full border p-2 rounded mt-1" >
+            <p id="err-phone" class="text-red-600 text-sm mt-1"></p>
+          </div>
+        </div>
 
-        <section class="info-popup fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50 hidden">
+        <div>
+          <label class="text-sm">Experiences professionnelles</label>
+          <div id="experiences" class="space-y-2 mt-2 max-h-40 overflow-auto"></div>
+          <div class="flex gap-2 mt-2">
+            <button id="addExp" type="button" class="bg-gray-200 px-2 py-1 rounded hover:scale-105 transition-transform duration-150">+ Ajouter experience</button>
+            <button id="clearExps" type="button" class="bg-red-200 px-2 py-1 rounded hover:scale-105 transition-transform duration-150">Vider</button>
+          </div>
+        </div>
 
-        </section>
+        <div class="flex justify-end gap-2">
+          <button id="cancelAdd" type="button" class="px-3 py-1 rounded bg-gray-200 hover:scale-105 transition-transform duration-150">Annuler</button>
+          <button type="submit" class="px-3 py-1 rounded bg-green-500 text-white hover:scale-105 transition-transform duration-150">Ajouter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- modal d assign-->
+  <div id="assignModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+    <div class="bg-white p-4 rounded shadow w-80">
+      <div class="flex justify-between mb-3">
+        <h3 class="font-bold">Affectation</h3>
+        <button id="closeAssign" class="text-red-500 font-bold hover:scale-105 transition-transform duration-150">X</button>
+      </div>
+      <div id="eligibleList" class="flex flex-col gap-2"></div>
+    </div>
+  </div>
 
-        <section class="section-workers fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50 hidden">
-            <div class=" bg-amber-200 w-96 rounded-2xl max-h-[80vh] overflow-y-auto [scrollbar-width:none]">
-                <i class="fas fa-x cursor-pointer m-3" id="close-showworkers"></i>
-                <div class="workers w-full grid grid-cols-1">
-                </div>
-            </div>
-        </section>
 
+  <!--modalde profil -->
+  <div id="profileModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+    <div class="bg-white p-5 rounded shadow w-[400px]">
+      <button id="closeProfile" class="text-red-500 font-bold float-right hover:scale-105 transition-transform duration-150">X</button>
+      <div id="profileContent"></div>
+    </div>
+  </div>
 
-    </main>
+  
+  <script src="./source.js" ></script>
 
-    <script src="source.js"></script>
 </body>
-
 </html>

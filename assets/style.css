@@ -1,56 +1,118 @@
-@import "tailwindcss";
+main {
+  background-image: url(./planimage.jpg);
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  display: grid;
+  width: 100%;
+  gap: 12px;
 
-*{
-    padding: 0;
-    margin: 0;
+
+  grid-template-areas:
+    "zone-conference zone-conference . zone-serveurs zone-securite"
+    "zone-reception zone-reception . . . "
+    "zone-reception zone-reception  .  zone-personnel  zone-archives ";
 }
 
-body{
-    background-color: rgb(254, 226, 186);
+#zone-conference {
+  grid-area: zone-conference;
+  
+  background-color: rgba(248, 251, 253, 0);
+  width: 100%;
 }
 
-.image-global{
-    background: url(/assets/planimage.jpg);
-    width: 80vw;
-    height: 90vh;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+span {
+  text-shadow: 2px 2px 10px white;
+}
+
+#zone-reception {
+  grid-area: zone-reception;
+  
+  background-color: rgba(249, 175, 175, 0.6);
+  width: 100%;
+}
+
+#zone-serveurs {
+  grid-area: zone-serveurs;
+  
+  background-color: rgba(249, 175, 175, 0.6);
+  width: 100%;
+}
+
+#zone-securite {
+  grid-area: zone-securite;
+  
+  background-color: rgba(249, 175, 175, 0.6);
+  width: 100%;
+}
+
+#zone-personnel {
+  grid-area: zone-personnel;
+  
+  background-color: rgba(248, 251, 253, 0);
+  width: 100%;
+}
+
+#zone-archives {
+  grid-area: zone-archives;
+  
+  background-color: rgba(249, 175, 175, 0.6);
+  width: 100%;
+}
+
+.small-card {
+  width: 250px;
+  font-size: 0.875rem;
+  padding: 8px;
+}
+
+.small-card img {
+  width: 32px;
+  height: 32px;
 }
 
 
-.all-roomes{
+.zone-filled {
+  background-color: rgba(248, 251, 253, 0) !important; /* transparent */
+}
+
+.zone-empty {
+  background-color: rgba(249, 175, 175, 0.6) !important; /* rouge pale */
+}
+
+
+/* mobile:max-width 768px */
+@media screen and (max-width: 768px) {
+
+  main {
     display: grid;
-    grid-template-columns: 37.5% 17.5% 22.5% 22.5%;
-    grid-template-rows: repeat(3 , 1fr);
-}
+    width: 100%;
+    gap: 10px;
+    padding: 10px;
 
-.box1{
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-}
+    
+    /* grid-template-areas:
+      "zone-conference"
+      "zone-reception"
+      "zone-serveurs"
+      "zone-securite"
+      "zone-personnel"
+      "zone-archives"; */
+    grid-template-areas:
+      "zone-conference zone-conference . zone-serveurs zone-securite"
+      "zone-reception zone-reception . . . "
+      "zone-reception zone-reception  .  zone-personnel  zone-archives ";
+  }
 
-.box2{
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
-}
+  
+  main {
+    transform: none !important;
+    height: auto;
+    width: 100%;
+    background-size: cover;
+  }
 
-.box3{
-    grid-column: 4 / 5;
-    grid-row: 1 / 2;
-}
-
-.box4{
-    grid-column: 1 / 2;
-    grid-row: 2 / 4;
-}
-
-.box5{
-    grid-column: 3 / 4;
-    grid-row: 3 / 4;
-}
-
-.box6{
-    grid-column: 4 / 5;
-    grid-row: 3 / 4;
+  .zone-label {
+    transform: none !important;
+  }
 }

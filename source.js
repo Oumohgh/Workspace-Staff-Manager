@@ -1,402 +1,609 @@
-const ROOM_IDS = {
-  reception: "salle-reception",
-  serveurs: "salle-serveurs",
-  securite: "salle-securite",
-  personnel: "salle-personnel",
-  archives: "salle-archives",
-  conference: "salle-conference"
+
+const STORAGE_KEY = "employees1";
+
+const ZONE_CAPACITY = {
+  conference: 4,
+  reception: 4,
+  serveurs: 4,
+  securite: 4,
+  personnel: 4,
+  archives: 2
 };
 
- 
-const ROLE_RULES = { //rroms m allowed
+const ROOM_IDS = {
+  conference: "zone-conference",
+  reception: "zone-reception",
+  serveurs: "zone-serveurs",
+  securite: "zone-securite",
+  personnel: "zone-personnel",
+  archives: "zone-archives"
+};
+
+
+const roleZones = {
   it: ["serveurs"],
   securite: ["securite"],
   reception: ["reception"],
   manager: ["reception","serveurs","securite","personnel","archives","conference"],
-  nettoyage: ["reception","serveurs","securite","personnel","conference"], // noot allowed to archive
+  nettoyage: ["reception","serveurs","securite","personnel","conference"],
   autres: ["reception","serveurs","securite","personnel","conference","archives"]
 };
 
-const STORAGE_KEY = "employees";
 
-let employees = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-let currentAssignRoom = null; 
+const ROLE_MAP = {
+  "receptionniste": "reception",
+  "technicien it": "it",
+  "technicien": "it",
+  "agent de sécurité": "securite",
+  "agent de securite": "securite",
+  "agent": "securite",
+  "manager": "manager",
+  "nettoyage": "nettoyage",
+  "autre": "autres",
+  "autres": "autres"
+};
 
-/* telecharger employes mn local storage */
-function saveEmployees() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
-}
-
-function fullName(obj){
-  return `${obj.firstname || ""} ${obj.lastname || ""}`.trim();
-}
-
-function placeholderPhoto(){
+function placeholderPhoto() {
   return "./assets/profile.png";
 }
 
-/* Sidebar*/
-function renderSidebarUnassigned(){
-  const container = document.querySelector(".place-workers");
-  if(!container) return;
-  container.innerHTML = ""; 
+// melange nom
+function fullName(emp) {
+  return `${emp.firstname || ""} ${emp.lastname || ""}`.trim();
+}
+
+// Charger employes mn LocalStorage
+function loadEmployees() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+}
+
+// Sauvegarder
+function saveEmployees() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
+  //console.log(1);
+}
+//DD
+// Normaliser le rle
+function normalizeRoleLabel(raw) {
+  if (!raw) return "autres";
+  return (raw || "").toLowerCase().trim();
+}//maju et minis traiti meme maniere
+
+function getRoleKey(rawLabel) {
+  const r = normalizeRoleLabel(rawLabel);
+  return ROLE_MAP[r] || r;
+}
+const validators = {
+  firstname: v => /^[A-Za-z À-ÖØ-öø-ÿ'’-]{2,40}$/.test(v.trim()),
+  lastname:  v => /^[A-Za-z À-ÖØ-öø-ÿ'’-]{0,40}$/.test(v.trim()),
+  email:     v => v.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+  phone:     v => v.trim() === "" || /^\+?[0-9 ()\-]{6,20}$/.test(v.trim()),
+  photo:     v => v.trim() === "" || /^(https?:\/\/.+\.(jpg|jpeg|png|webp|gif))$/i.test(v.trim())
+};
+
+let employees = loadEmployees();
+let editingId = null;
+let currentAssignZone = null;
+
+const unassignedListEl = document.getElementById("unassignedList");
+const openAddModalBtn = document.getElementById("openAddModal");
+const addModal = document.getElementById("addModal");
+const addEmployeeForm = document.getElementById("addEmployeeForm");
+
+const nameInput = document.getElementById("name");
+const roleInput = document.getElementById("role");
+const photoInput = document.getElementById("photo");
+const previewImg = document.getElementById("preview");
+const emailInput = document.getElementById("email");
+const phoneInput = document.getElementById("phone");
+
+const experiencesContainer = document.getElementById("experiences");
+const addExpBtn = document.getElementById("addExp");
+const clearExpsBtn = document.getElementById("clearExps");
+
+const cancelAddBtn = document.getElementById("cancelAdd");
+
+const assignModal = document.getElementById("assignModal");
+const eligibleList = document.getElementById("eligibleList");
+const closeAssign = document.getElementById("closeAssign");
+
+const profileModal = document.getElementById("profileModal");
+const profileContent = document.getElementById("profileContent");
+const closeProfile = document.getElementById("closeProfile");
+
+const errName  = document.getElementById("err-name");
+const errPhoto = document.getElementById("err-photo");
+const errEmail = document.getElementById("err-email");
+const errPhone = document.getElementById("err-phone");
+
+function renderUnassigned() {
+  unassignedListEl.innerHTML = "";
 
   const unassigned = employees.filter(e => !e.zone);
-
-  if(unassigned.length === 0){
-    container.innerHTML = `<div class="p-4 text-center text-gray-500">No unassigned Employees</div>`;
+  if (unassigned.length === 0) {
+    unassignedListEl.innerHTML = `<li class="text-gray-500 p-2">Aucun employe non affecte</li>`;
     return;
   }
 
   unassigned.forEach(emp => {
-    const el = document.createElement("div");
-    el.className = "profil-card mb-3 flex items-center gap-3 p-2 bg-white/80 rounded shadow";
-    el.innerHTML = `
-      <div class="img-profil w-12 h-12 rounded-full bg-cover bg-center" style="background-image:url('${emp.photo || placeholderPhoto()}')"></div>
-      <div class="flex-1">
-        <p class="font-semibold text-sm preview-trigger" data-id="${emp.id}">${fullName(emp)}</p>
+    const li = document.createElement("li");
+    li.className = "flex items-center gap-3 p-2 bg-white rounded shadow-sm";
+
+    li.innerHTML = `
+      <div class="w-10 h-10 rounded-full bg-cover bg-center"
+           style="background-image:url('${emp.photo || placeholderPhoto()}')"></div>
+
+      <div class="flex-1 min-w-0">
+        <div class="font-medium text-sm preview-trigger" data-id="${emp.id}">
+          ${fullName(emp)}
+        </div>
         <div class="text-xs text-gray-500">${emp.role}</div>
       </div>
-      <button class="btn-edit ml-2 px-2 py-1 text-xs bg-indigo-600 text-white rounded" data-id="${emp.id}">Preview</button>
+
+      <div class="flex gap-1">
+        <button class="edit-btn px-2 py-1 text-sm bg-yellow-200 rounded" data-id="${emp.id}">Edit</button>
+        <button class="delete-btn px-2 py-1 text-sm bg-red-200 rounded" data-id="${emp.id}">Delete</button>
+      </div>
     `;
-    container.appendChild(el);
+
+    unassignedListEl.appendChild(li);
   });
 }
-/* Render emp
-   Display  img +smia*/
-function renderRooms(){
-  // clear room children except the + button
-  Object.values(ROOM_IDS).forEach(roomId => {
-    const roomEl = document.getElementById(roomId);
-    if(!roomEl) return;
-    // Supprime les cartes de emp li kaynen mais garder les boutons
-    
-    Array.from(roomEl.querySelectorAll("[data-employee-id]")).forEach(n=>n.remove());
-  });
 
-  // place employes f rooms
-  employees.filter(e => e.zone).forEach(emp => {
-    const roomKey = emp.zone;
-    const roomId = ROOM_IDS[roomKey];
-    const roomEl = document.getElementById(roomId);
-    if(!roomEl) return;
+function renderZones() {
+  Object.keys(ROOM_IDS).forEach(zoneKey => {
+    const zoneEl = document.getElementById(ROOM_IDS[zoneKey]);
+    if (!zoneEl) return;
 
-    const ajouterDiv = document.createElement("div");
-    ajouterDiv.className = "worker-card flex flex-col items-center gap-1 m-2 text-center";
-    ajouterDiv.setAttribute("data-employee-id", emp.id);
-    ajouterDiv.innerHTML = `
-      <img src="${emp.photo || placeholderPhoto()}" alt="${fullName(emp)}"
-           class="w-12 h-12 rounded-full object-cover cursor-pointer preview-trigger" data-id="${emp.id}">
-      <span class="text-xs">${fullName(emp)}</span>
-      <button class="unassign-btn mt-1 text-xs text-red-600">X</button>
-    `;
-    
-    roomEl.appendChild(ajouterDiv);
-  });
-}
-/* affiche modal mn preview */
-function showModal(emp){
-  const modal = document.querySelector(".info-popup");
-  if(!modal) return;
-  modal.innerHTML = `
-    <div class="bg-white rounded-lg p-4 w-80">
-      <div class="flex justify-end"><button id="closePreview" class="text-xl">×</button></div>
-      <div class="flex flex-col items-center gap-3">
-        <img src="${emp.photo || placeholderPhoto()}" class="w-24 h-24 rounded-full object-cover">
-        <h3 class="font-bold">${fullName(emp)}</h3>
-        <div class="text-sm text-gray-600">${emp.role}</div>
-        <div class="text-sm">${emp.email || ""}</div>
-        <div class="text-sm">${emp.tele || ""}</div>
-      </div>
-      <hr class="my-3">
-      <div>
-        <h4 class="text-sm font-semibold mb-2">Experiences</h4>
-        ${ (emp.experiences || []).map(x=>`<div class="mb-2 text-sm"><strong>${x.company||""}</strong> — ${x.role||""} <br><small>${x.duration||""}</small></div>`).join("") || "<div class='text-xs text-gray-500'>No experiences</div>"}
-      </div>
-      <div class="mt-3 flex gap-2">
-        <button id="closePreview2" class="flex-1 py-2 bg-indigo-600 text-black rounded">Fermer</button>
-      </div>
-    </div>
-  `;
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-}
+    const occupantsEl = zoneEl.querySelector(".zone-occupants");
+    occupantsEl.innerHTML = "";
 
-/*  show modal dial employes f kola room */
-function openAssignModalFor(roomKey){
-  currentAssignRoom = roomKey;
-  const modal = document.querySelector(".section-workers");
-  const container = modal.querySelector(".workers");
-  container.innerHTML = "";
+    const occupants = employees.filter(e => e.zone === zoneKey);
+    const capacity  = ZONE_CAPACITY[zoneKey] ?? DEFAULT_CAPACITY;
 
-  // find wach emp egligable l hadek room
-  const admis= employees.filter(e => !e.zone && isAdmisForRoom(e.role, roomKey));
+    /* Affichage du compteur */
+    const labelEl = zoneEl.querySelector(".zone-label");
+    if (labelEl) {
+      const labelTxt = labelEl.textContent.split("(")[0].trim();
+      labelEl.textContent = `${labelTxt} (${occupants.length}/${capacity})`;
+    }
 
-  if(admis.length === 0){
-    container.innerHTML = `<div class="p-4 text-sm text-gray-600">No admis unassigned workers</div>`;
-  } else {
-    admis.forEach(emp => {
+  /* liste de occupants */
+    occupants.forEach(emp => {
       const div = document.createElement("div");
-      div.className = "p-3 border-b flex items-center justify-between";
+      div.className = "flex items-center gap-2 p-2 bg-white/90 rounded shadow-sm";
+      div.setAttribute("data-employee-id", emp.id);
+
       div.innerHTML = `
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-cover" style="background-image:url('${emp.photo || placeholderPhoto()}')"></div>
-          <div>
-            <div class="text-sm font-medium">${fullName(emp)}</div>
-            <div class="text-xs text-black-500">${emp.role}</div>
+        <img class="w-10 h-10 rounded-full cursor-pointer preview-trigger"
+             src="${emp.photo || placeholderPhoto()}" data-id="${emp.id}">
+
+        <div class="flex-1">
+          <div class="text-sm preview-trigger" data-id="${emp.id}">
+            ${fullName(emp)}
           </div>
+          <div class="text-xs text-gray-500">${emp.role}</div>
         </div>
-        <div>
-          <button class="assign-btn px-3 py-1 bg-green-600 text-white rounded text-sm" data-id="${emp.id}">Assign</button>
-        </div>
+
+        <button class="unassign-btn px-2 py-1 text-sm bg-red-100 rounded"
+                data-id="${emp.id}">
+          X
+        </button>
       `;
-      container.appendChild(div);
+
+      occupantsEl.appendChild(div);
     });
-  }
 
-  modal.classList.remove("hidden");
-}
-
-function isAdmisForRoom(role, roomKey){
-  // normalise role  bach matchi rols
-  const r = (role || "").toLowerCase();
-  const ruleKey = {
-    "techniciens it": "it",
-    "it": "it",
-    "technicien": "it",
-    "agents de securite": "securite",
-    "agent": "securite",
-    "securite": "securite",
-    "receptionnistes": "reception",
-    "receptionniste": "reception",
-    "reception": "reception",
-    "manager": "manager",
-    "nettoyage": "nettoyage",
-    "autres": "autres",
-    "autre": "autres"
-  }[r] || r;
-
-  const allowed = ROLE_RULES[ruleKey];
-  if(!allowed) return false;
-  return allowed.includes(roomKey);
-}
-
-/* button jded 3la work form*/
-const addNewWorkerBtn = document.getElementById("add-new-worker");
-const formAffichageEmploye = document.querySelector(".form-worker");
-const staffForm = document.getElementById("staffForm");
-const imageUrlInput = document.getElementById("imageUrl");
-const imagePreview = document.getElementById("imagePreview");
-const placeholderText = document.getElementById("placeholderText");
-
-if(addNewWorkerBtn){
-  addNewWorkerBtn.addEventListener("click", ()=> {
-    formAffichageEmploye.classList.remove("hidden");
-    formAffichageEmploye.classList.add("flex");
+    if (occupants.length === 0) {
+      occupantsEl.innerHTML = `<div class="text-gray-500 p-2 text-sm">Aucun occupant</div>`;
+    }
   });
 }
 
+function setError(node, msg) {
+  node.textContent = msg || "";
+}
 
-staffForm.addEventListener("reset", ()=> {
-  formAffichageEmploye.classList.add("hidden");
-  formAffichageEmploye.classList.remove("flex");
-//cleari img
-  imagePreview.src = "";
-  imagePreview.classList.add("hidden");
-  placeholderText.classList.remove("hidden");
- // clear exp
-  document.querySelector(".form-experience").innerHTML = "";
+function validateField(field, value) {
+  const fn = validators[field];
+  return fn ? fn(value) : true;
+}
+
+
+//dd///
+
+
+function createExperienceBlock(data = {}) {
+  const div = document.createElement("div");
+  div.className = "exp-block border p-2 rounded bg-white/80 flex flex-col gap-2";
+
+  div.innerHTML = `
+    <input class="exp-company border p-1 rounded" placeholder="Entreprise" value="${data.company || ""}">
+    <input class="exp-role border p-1 rounded"     placeholder="Rôle"       value="${data.role || ""}">
+    <input class="exp-duration border p-1 rounded" placeholder="Durée"      value="${data.duration || ""}">
+    <button type="button" class="remove-exp px-2 py-1 bg-red-200 rounded self-end">Supprimer</button>
+  `;
+
+  return div;
+}
+
+openAddModalBtn.addEventListener("click", () => openAddModal());
+
+function openAddModal(emp = null) {
+
+  editingId = emp ? emp.id : null;
+
+  /* Reinitialisation */
+  addEmployeeForm.reset();
+  experiencesContainer.innerHTML = "";
+  previewImg.classList.add("hidden");
+  previewImg.src = "";
+
+  /* Si mode edition : remplir les doneees */
+  if (emp) {
+    nameInput.value  = `${emp.firstname} ${emp.lastname}`.trim();
+    roleInput.value  = emp.role;
+    photoInput.value = emp.photo;
+    emailInput.value = emp.email || "";
+    phoneInput.value = emp.tele || "";
+
+    if (emp.photo) {
+      previewImg.src = emp.photo;
+      previewImg.classList.remove("hidden");
+    }
+
+    if (emp.experiences) {
+      emp.experiences.forEach(x =>
+        experiencesContainer.appendChild(createExperienceBlock(x))
+      );
+    }
+  }
+
+  addModal.classList.remove("hidden");
+}
+
+/* Annuler */
+cancelAddBtn.addEventListener("click", () => {
+  addModal.classList.add("hidden");
+  editingId = null;
 });
 
+/* Ajouter une experience */
+addExpBtn.addEventListener("click", () => {
+  experiencesContainer.appendChild(createExperienceBlock());
+});
 
-imageUrlInput.addEventListener("input", (e)=>{
+/* Vider expr */
+clearExpsBtn.addEventListener("click", () => {
+  experiencesContainer.innerHTML = "";
+});
+
+/* Supprimer une expe */
+experiencesContainer.addEventListener("click", e => {
+  if (e.target.classList.contains("remove-exp")) {
+    e.target.closest(".exp-block")?.remove();
+  }
+});
+
+/* Prev image */
+photoInput.addEventListener("input", e => {
   const url = e.target.value.trim();
-  if(url){
-    imagePreview.src = url;
-    imagePreview.classList.remove("hidden");
-    placeholderText.classList.add("hidden");
-  } else {
-    imagePreview.src = "";
-    imagePreview.classList.add("hidden");
-    placeholderText.classList.remove("hidden");
-  }
-});
-
-const addExpBtn = document.querySelector(".btn-add-experience button") || document.querySelector(".btn-add-experience");
-const expContainer = document.querySelector(".form-experience");
-
-if(addExpBtn){
-  addExpBtn.addEventListener("click", ()=> {
-    const block = document.createElement("div");
-    block.className = "mb-3 exp-block border p-3 rounded bg-white/70";
-    block.innerHTML = `
-      <label class="block text-sm mb-1">Entreprise</label>
-      <input class="w-full px-3 py-2 border rounded mb-2 exp-company" type="text">
-      <label class="block text-sm mb-1">Role</label>
-      <input class="w-full px-3 py-2 border rounded mb-2 exp-role" type="text">
-      <label class="block text-sm mb-1">Durée</label>
-      <input class="w-full px-3 py-2 border rounded mb-2 exp-duration" type="text">
-      <div class="text-right"><button type="button" class="remove-exp inline-block px-3 py-1 text-sm bg-red-500 text-white rounded">Supprimer</button></div>
-    `;
-    expContainer.appendChild(block);
-  });
-}
-
-/* remove  blocks dial exper */
-document.addEventListener("click", (e)=>{
-  if(e.target.classList.contains("remove-exp")){
-    e.target.closest(".exp-block").remove();
-  }
-});
-
-/* form submit -> aajouter employe */
-staffForm.addEventListener("submit", (ev)=>{
-  ev.preventDefault();
-
-  const firstname = document.getElementById("nom-worker").value.trim();
-  const lastname  = document.getElementById("prenom-worker").value.trim();
-  const email     = document.getElementById("email-worker").value.trim();
-  const imageUrl  = document.getElementById("imageUrl").value.trim() || placeholderPhoto();
-  const role      = document.getElementById("role-worker").value || "autres";
-
-  const newEmp = {
-    id:idcount,// crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
-    firstname,
-    lastname,
-    email,
-    tele: "", // not present in this form
-    photo: imageUrl,
-    role,
-    experiences: [],
-    zone: null
-  };
-
-  // collect experiences
-  document.querySelectorAll(".exp-block").forEach(b => {
-    newEmp.experiences.push({
-      company: b.querySelector(".exp-company")?.value || "",
-      role: b.querySelector(".exp-role")?.value || "",
-      duration: b.querySelector(".exp-duration")?.value || ""
-    });
-  });
-
-  employees.push(newEmp);
-  saveEmployees();
-
-
-  staffForm.reset();
-  document.querySelector(".form-experience").innerHTML = "";
-  formAffichageEmploye.classList.add("hidden");
-  formAffichageEmploye.classList.remove("flex");
-  imagePreview.src = "";
-  imagePreview.classList.add("hidden");
-  placeholderText.classList.remove("hidden");
-
-  // update stylee
-  renderSidebarUnassigned();
-  renderRooms();
+  previewImg.src = url || "";
+  previewImg.classList.toggle("hidden", url === "");
 });
 
 
-document.addEventListener("click", (e)=>{
-  const t = e.target;
-  if(t.matches(".preview-trigger") || t.closest(".preview-trigger") || t.classList.contains("btn-edit")){
-    
-    const id = t.getAttribute("data-id") || t.closest("[data-id]")?.getAttribute("data-id") || t.getAttribute("data-id");
-    let emp = employees.find(x => x.id === id);
-    if(!emp){
-    
-      const text = t.textContent?.trim();
-      emp = employees.find(x => fullName(x) === text);
+
+[nameInput, emailInput, phoneInput, photoInput].forEach(input => {
+  if (!input) return;
+
+  input.addEventListener("blur", e => {
+    const id = e.target.id;
+    const value = e.target.value;
+
+    switch (id) {
+      case "name":
+        setError(errName,
+          validateField("firstname", value) ? "" :
+          "Nom invalide (min. 2 lettres)"
+        );
+        break;
+
+      case "email":
+        setError(errEmail,
+          validateField("email", value) ? "" :
+          "Email invalide"
+        );
+        break;
+
+      case "phone":
+        setError(errPhone,
+          validateField("phone", value) ? "" :
+          "Numero invalide"
+        );
+        break;
+
+      case "photo":
+        setError(errPhoto,
+          validateField("photo", value) ? "" :
+          "URL image invalide"
+        );
+        break;
     }
-    if(emp){
-      showModal(emp);
-    }
-  }
+  });
+});
 
-  // 
-  if(t.id === "closePreview" || t.id === "closePreview2"){
-    document.querySelector(".info-popup").classList.add("hidden");
-    document.querySelector(".info-popup").classList.remove("flex");
-  }
+
+addEmployeeForm.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const name  = nameInput.value.trim();
+  const role  = roleInput.value.trim();
+  const photo = photoInput.value.trim();
+  const email = emailInput.value.trim();
+  const phone = phoneInput.value.trim();
+
+  /* Validation */
+  const valide =
+    validateField("firstname", name) &&
+    validateField("email", email) &&
+    validateField("phone", phone) &&
+    validateField("photo", photo);
+
+  if (!valide) return;
 
   
-  if(t.classList.contains("assign-btn")){
-    const id = t.getAttribute("data-id");
-    assignToRoomById(id, currentAssignRoom);
-   
-    document.querySelector(".section-workers").classList.add("hidden");
-  }
+  const parts = name.split(" ");
+  const firstname = parts[0];
+  const lastname = parts.slice(1).join(" ");
 
-  if(t.classList.contains("unassign-btn")){
-    const wrapper = t.closest("[data-employee-id]");
-    const id = wrapper ? wrapper.getAttribute("data-employee-id") : null;
-    if(id){
-      const emp = employees.find(x => x.id === id);
-      if(emp){
-        emp.zone = null;
-        saveEmployees();
-        renderSidebarUnassigned();
-        renderRooms();
-      }
-    }
-  }
-});
-
-const mappingBtnToRoom = [
-  {cls: "btn-add-conference", room: "conference"},
-  {cls: "btn-add-serveurs", room: "serveurs"},
-  {cls: "btn-add-securite", room: "securite"},
-  {cls: "btn-add-reception", room: "reception"},
-  {cls: "btn-add-personnel", room: "personnel"},
-  {cls: "btn-add-archives", room: "archives"}
-];
-
-mappingBtnToRoom.forEach(m => {
-  document.querySelectorAll("."+m.cls).forEach(btn => {
-    btn.addEventListener("click", ()=>{
-      currentAssignRoom = m.room;
-      openAssignModalFor(m.room);
+  /* Recup expr */
+  const experiences = [];
+  experiencesContainer.querySelectorAll(".exp-block").forEach(b => {
+    experiences.push({
+      company: b.querySelector(".exp-company").value.trim(),
+      role:    b.querySelector(".exp-role").value.trim(),
+      duration:b.querySelector(".exp-duration").value.trim()
     });
   });
+
+  if (editingId) {
+    /* mode edi */
+    const emp = employees.find(x => x.id === editingId);
+
+    emp.firstname   = firstname;
+    emp.lastname    = lastname;
+    emp.role        = role;
+    emp.photo       = photo || placeholderPhoto();
+    emp.email       = email;
+    emp.tele        = phone;
+    emp.experiences = experiences;
+
+  } else {
+    /* Nv*/
+    employees.push({
+      id: crypto.randomUUID(),
+      firstname,
+      lastname,
+      role,
+      photo: photo || placeholderPhoto(),
+      email,
+      tele: phone,
+      experiences,
+      zone: null
+    });
+  }
+
+  saveEmployees();
+  addModal.classList.add("hidden");
+  editingId = null;
+
+  renderAll();
 });
 
+function openAssignModal(zoneKey) {
+  currentAssignZone = zoneKey;
+  eligibleList.innerHTML = "";
 
-const closeShowWorkers = document.getElementById("close-showworkers");
-if(closeShowWorkers){
-  closeShowWorkers.addEventListener("click", ()=> {
-    document.querySelector(".section-workers").classList.add("hidden");
-  });
-}
+  const capacity = ZONE_CAPACITY[zoneKey] ?? DEFAULT_CAPACITY;
+  const count    = employees.filter(e => e.zone === zoneKey).length;
 
-/* Assign b id*/
-function assignToRoomById(empId, roomKey){
-  const emp = employees.find(x => x.id === empId);
-  if(!emp) return;
-
-  // filt
-  if(!isAdmisForRoom(emp.role, roomKey)){
-    alert("This employee role is not allowed in this room.");
+  if (count >= capacity) {
+    eligibleList.innerHTML = `
+      <div class="p-3 text-red-600">
+        Zone pleine (${count}/${capacity})
+      </div>`;
+    assignModal.classList.remove("hidden");
     return;
   }
 
-  emp.zone = roomKey;
-  saveEmployees();
-  renderSidebarUnassigned();
-  renderRooms();
+  /* Employes non affectes et autoris */
+  const list = employees.filter(e =>
+    !e.zone && isAdmisForRoom(e.role, zoneKey)
+  );
+
+  if (list.length === 0) {
+    eligibleList.innerHTML = `<div class="p-3 text-gray-600">Aucun employe eligible</div>`;
+  }
+
+  list.forEach(emp => {
+    const row = document.createElement("div");
+    row.className = "flex items-center justify-between p-2 border-b";
+
+    row.innerHTML = `
+      <div class="flex items-center gap-2">
+        <img class="w-10 h-10 rounded-full"
+             src="${emp.photo || placeholderPhoto()}">
+        <div>
+          <div class="text-sm">${fullName(emp)}</div>
+          <div class="text-xs text-gray-500">${emp.role}</div>
+        </div>
+      </div>
+      <button class="assign-now px-3 py-1 bg-green-200 rounded" data-id="${emp.id}">
+        Affecter
+      </button>
+    `;
+
+    eligibleList.appendChild(row);
+  });
+
+  assignModal.classList.remove("hidden");
 }
 
-
-document.querySelectorAll(".section-workers, .info-popup").forEach(el=>{
-  el.addEventListener("click", (e)=>{
-    if(e.target === el){
-      el.classList.add("hidden");
-    }
-  });
+closeAssign.addEventListener("click", () => {
+  assignModal.classList.add("hidden");
+  currentAssignZone = null;
 });
 
-/*ini style */
-(function init(){
-  renderSidebarUnassigned();
-  renderRooms();
+eligibleList.addEventListener("click", e => {
+  const btn = e.target.closest(".assign-now");
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+  const emp = employees.find(x => x.id === id);
+  if (!emp) return;
+
+  const capacity = ZONE_CAPACITY[currentAssignZone];
+  const count    = employees.filter(e => e.zone === currentAssignZone).length;
+
+  if (count >= capacity) {
+    alert("Capacite atteinte dans cette zone.");
+    return;
+  }
+
+  if (!isAdmisForRoom(emp.role, currentAssignZone)) {
+    alert("Ce role n est pas autorise dans cette zone");
+    return;
+  }
+
+  emp.zone = currentAssignZone;
+
+  saveEmployees();
+  assignModal.classList.add("hidden");
+  renderAll();
+});
+
+/* Verifier role autorise */
+function isAdmisForRoom(roleString, roomKey) {
+  const rKey = getRoleKey(roleString);
+  const allowed = roleZones[rKey];
+  return allowed ? allowed.includes(roomKey) : false;
+}
+
+function showProfile(emp) {
+  profileContent.innerHTML = `
+    <div class="flex flex-col gap-3">
+
+      <div class="flex justify-end">
+        <button id="profileCloseBtn" class="text-lg">×</button>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <img src="${emp.photo || placeholderPhoto()}" class="w-24 h-24 rounded-full">
+        <div>
+          <h3 class="font-bold">${fullName(emp)}</h3>
+          <div class="text-sm text-gray-500">${emp.role}</div>
+          <div class="text-sm">${emp.email || ""}</div>
+          <div class="text-sm">${emp.tele || ""}</div>
+          <div class="text-sm text-gray-400">Zone : ${emp.zone || "Non affecté"}</div>
+        </div>
+      </div>
+
+      <h4 class="font-semibold mt-3">Experiences</h4>
+      <div class="p-2 border rounded bg-gray-50">
+        ${
+          emp.experiences?.length
+            ? emp.experiences.map(x => `
+                <div class="text-sm my-1">
+                  <strong>${x.company || ""}</strong> — ${x.role || ""}<br>
+                  <small>${x.duration || ""}</small>
+                </div>
+              `).join("")
+            : "<div class='text-xs text-gray-500'>Aucune expérience</div>"
+        }
+      </div>
+
+      <div class="flex justify-end gap-2 mt-3">
+        <button id="profileEdit" class="px-3 py-1 bg-yellow-200 rounded" data-id="${emp.id}">Modifier</button>
+        <button id="profileDelete" class="px-3 py-1 bg-red-200 rounded" data-id="${emp.id}">Supprimer</button>
+      </div>
+
+    </div>
+  `;
+
+  profileModal.classList.remove("hidden");
+}
+/* Actions du profil */
+profileContent.addEventListener("click", e => {
+  const t = e.target;
+
+  if (t.id === "profileCloseBtn") {
+    profileModal.classList.add("hidden");
+    return;
+  }
+
+  if (t.id === "profileEdit") {
+    const emp = employees.find(x => x.id === t.dataset.id);
+    profileModal.classList.add("hidden");
+    openAddModal(emp);
+    return;
+  }
+
+  if (t.id === "profileDelete") {
+    const id = t.dataset.id;
+    if (!confirm("Supprimer cet employe?")) return;
+
+    employees = employees.filter(x => x.id !== id);
+    saveEmployees();
+    profileModal.classList.add("hidden");
+    renderAll();
+  }
+});
+
+closeProfile.addEventListener("click", () => profileModal.classList.add("hidden"));
+
+document.addEventListener("click", e => {
+  const t = e.target;
+
+  /* Ouvrir assignation depuis le bouton + */
+  if (t.classList.contains("zone-plus")) {
+    openAssignModal(t.dataset.zone);
+  }
+
+  /* Apercu profil */
+  if (t.classList.contains("preview-trigger")) {
+    const emp = employees.find(x => x.id === t.dataset.id);
+    if (emp) showProfile(emp);
+  }
+
+  /* Modifier un employe */
+  if (t.classList.contains("edit-btn")) {
+    const emp = employees.find(x => x.id === t.dataset.id);
+    openAddModal(emp);
+  }
+
+  /* Supprimer de la liste non affecte */
+  if (t.classList.contains("delete-btn")) {
+    if (!confirm("Supprimer cet employe?")) return;
+    employees = employees.filter(x => x.id !== t.dataset.id);
+    saveEmployees();
+    renderAll();
+  }
+
+  /* desaffecter depuis zone */
+  if (t.classList.contains("unassign-btn")) {
+    const emp = employees.find(x => x.id === t.dataset.id);
+    emp.zone = null;
+    saveEmployees();
+    renderAll();
+  }
+});
+
+function renderAll() {
+  renderUnassigned();
+  renderZones();
+}
+
+(function init() {
+  renderAll();
 })();
