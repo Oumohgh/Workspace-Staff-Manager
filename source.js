@@ -226,3 +226,177 @@ function createExperienceBlock(data = {}) {
 
   return div;
 }
+
+openAddModalBtn.addEventListener("click", () => openAddModal());
+
+function openAddModal(emp = null) {
+
+  editingId = emp ? emp.id : null;
+
+  /* Reinitialisation */
+  addEmployeeForm.reset();
+  experiencesContainer.innerHTML = "";
+  previewImg.classList.add("hidden");
+  previewImg.src = "";
+
+  /* Si mode edition : remplir les doneees */
+  if (emp) {
+    nameInput.value  = `${emp.firstname} ${emp.lastname}`.trim();
+    roleInput.value  = emp.role;
+    photoInput.value = emp.photo;
+    emailInput.value = emp.email || "";
+    phoneInput.value = emp.tele || "";
+
+    if (emp.photo) {
+      previewImg.src = emp.photo;
+      previewImg.classList.remove("hidden");
+    }
+
+    if (emp.experiences) {
+      emp.experiences.forEach(x =>
+        experiencesContainer.appendChild(createExperienceBlock(x))
+      );
+    }
+  }
+
+  addModal.classList.remove("hidden");
+}
+
+/* Annuler */
+cancelAddBtn.addEventListener("click", () => {
+  addModal.classList.add("hidden");
+  editingId = null;
+});
+
+/* Ajouter une experience */
+addExpBtn.addEventListener("click", () => {
+  experiencesContainer.appendChild(createExperienceBlock());
+});
+
+/* Vider expr */
+clearExpsBtn.addEventListener("click", () => {
+  experiencesContainer.innerHTML = "";
+});
+
+/* Supprimer une expe */
+experiencesContainer.addEventListener("click", e => {
+  if (e.target.classList.contains("remove-exp")) {
+    e.target.closest(".exp-block")?.remove();
+  }
+});
+
+/* Prev image */
+photoInput.addEventListener("input", e => {
+  const url = e.target.value.trim();
+  previewImg.src = url || "";
+  previewImg.classList.toggle("hidden", url === "");
+});
+
+
+
+[nameInput, emailInput, phoneInput, photoInput].forEach(input => {
+  if (!input) return;
+
+  input.addEventListener("blur", e => {
+    const id = e.target.id;
+    const value = e.target.value;
+
+    switch (id) {
+      case "name":
+        setError(errName,
+          validateField("firstname", value) ? "" :
+          "Nom invalide (min. 2 lettres)"
+        );
+        break;
+
+      case "email":
+        setError(errEmail,
+          validateField("email", value) ? "" :
+          "Email invalide"
+        );
+        break;
+
+      case "phone":
+        setError(errPhone,
+          validateField("phone", value) ? "" :
+          "Numéro invalide"
+        );
+        break;
+
+      case "photo":
+        setError(errPhoto,
+          validateField("photo", value) ? "" :
+          "URL image invalide"
+        );
+        break;
+    }
+  });
+});
+
+
+addEmployeeForm.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const name  = nameInput.value.trim();
+  const role  = roleInput.value.trim();
+  const photo = photoInput.value.trim();
+  const email = emailInput.value.trim();
+  const phone = phoneInput.value.trim();
+
+  /* Validation */
+  const valide =
+    validateField("firstname", name) &&
+    validateField("email", email) &&
+    validateField("phone", phone) &&
+    validateField("photo", photo);
+
+  if (!valide) return;
+
+  
+  const parts = name.split(" ");
+  const firstname = parts[0];
+  const lastname = parts.slice(1).join(" ");
+
+  /* Recup expr */
+  const experiences = [];
+  experiencesContainer.querySelectorAll(".exp-block").forEach(b => {
+    experiences.push({
+      company: b.querySelector(".exp-company").value.trim(),
+      role:    b.querySelector(".exp-role").value.trim(),
+      duration:b.querySelector(".exp-duration").value.trim()
+    });
+  });
+
+  if (editingId) {
+    /* mode edi */
+    const emp = employees.find(x => x.id === editingId);
+
+    emp.firstname   = firstname;
+    emp.lastname    = lastname;
+    emp.role        = role;
+    emp.photo       = photo || placeholderPhoto();
+    emp.email       = email;
+    emp.tele        = phone;
+    emp.experiences = experiences;
+
+  } else {
+    /* Nv*/
+    employees.push({
+      id: idcount,
+      firstname,
+      lastname,
+      role,
+      photo: photo || placeholderPhoto(),
+      email,
+      tele: phone,
+      experiences,
+      zone: null
+    });
+  }
+
+  saveEmployees();
+  addModal.classList.add("hidden");
+  editingId = null;
+
+  renderAll();
+});
