@@ -24,7 +24,7 @@
 
     <ul id="unassignedList" class="flex flex-col gap-2"></ul>
 
-    <button id="openAddModal" class="mt-4 bg-blue-600 text-white py-2 rounded">
+    <button id="openAddModal" class="mt-4 bg-blue-600 text-white py-2 rounded hover:scale-105 transition-transform duration-150">
       Add New Worker
     </button>
   </aside>
@@ -37,7 +37,7 @@
       <div class="zone-occupants flex flex-col gap-1"></div>
       <div class="flex flex-col items-center">
         <span class="font-bold text-x zone-label">Conférence</span>
-        <button class="zone-plus text-blue-700 font-bold text-4xl" data-zone="conference">+</button>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="conference">+</button>
       </div>
 
     </div>
@@ -46,7 +46,7 @@
     <div id="zone-reception" class="rounded shadow flex flex-col justify-center items-center">
       <div class="flex flex-col items-center mb-2">
         <span class="font-bold text-x zone-label">Reception</span>
-        <button class="zone-plus text-blue-700 font-bold text-4xl" data-zone="reception">+</button>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="reception">+</button>
       </div>
       <div class="zone-occupants flex flex-col gap-1"></div>
     </div>
@@ -54,7 +54,7 @@
     <div id="zone-serveurs" class=" rounded shadow flex flex-col justify-center items-center">
       <div class="flex flex-col items-center mb-2">
         <span class="font-bold text-x zone-label">Serveurs</span>
-        <button class="zone-plus text-blue-700 font-bold text-4xl" data-zone="serveurs">+</button>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="serveurs">+</button>
       </div>
       <div class="zone-occupants flex flex-col gap-1"></div>
     </div>
@@ -70,7 +70,7 @@
     <div id="zone-personnel" class=" rounded shadow flex flex-col justify-center items-center">
       <div class="flex flex-col items-center mb-2">
         <span class="font-bold text-x zone-label">Personnel</span>
-        <button class="zone-plus text-blue-700 font-bold text-4xl" data-zone="personnel">+</button>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="personnel">+</button>
       </div>
       <div class="zone-occupants flex flex-col gap-1"></div>
     </div>
@@ -78,7 +78,7 @@
     <div id="zone-archives" class="rounded shadow flex flex-col justify-center items-center">
       <div class="flex flex-col items-center mb-2">
         <span class="font-bold text-x zone-label">Archives</span>
-        <button class="zone-plus text-blue-700 font-bold text-4xl" data-zone="archives">+</button>
+        <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="archives">+</button>
       </div>
       <div class="zone-occupants flex flex-col gap-1"></div>
     </div>
@@ -132,14 +132,14 @@
           <label class="text-sm">Experiences professionnelles</label>
           <div id="experiences" class="space-y-2 mt-2 max-h-40 overflow-auto"></div>
           <div class="flex gap-2 mt-2">
-            <button id="addExp" type="button" class="bg-gray-200 px-2 py-1 rounded">+ Ajouter experience</button>
-            <button id="clearExps" type="button" class="bg-red-200 px-2 py-1 rounded">Vider</button>
+            <button id="addExp" type="button" class="bg-gray-200 px-2 py-1 rounded hover:scale-105 transition-transform duration-150">+ Ajouter experience</button>
+            <button id="clearExps" type="button" class="bg-red-200 px-2 py-1 rounded hover:scale-105 transition-transform duration-150">Vider</button>
           </div>
         </div>
 
         <div class="flex justify-end gap-2">
-          <button id="cancelAdd" type="button" class="px-3 py-1 rounded bg-gray-200">Annuler</button>
-          <button type="submit" class="px-3 py-1 rounded bg-green-500 text-white">Ajouter</button>
+          <button id="cancelAdd" type="button" class="px-3 py-1 rounded bg-gray-200 hover:scale-105 transition-transform duration-150">Annuler</button>
+          <button type="submit" class="px-3 py-1 rounded bg-green-500 text-white hover:scale-105 transition-transform duration-150">Ajouter</button>
         </div>
       </form>
     </div>
@@ -149,7 +149,7 @@
     <div class="bg-white p-4 rounded shadow w-80">
       <div class="flex justify-between mb-3">
         <h3 class="font-bold">Affectation</h3>
-        <button id="closeAssign" class="text-red-500 font-bold">X</button>
+        <button id="closeAssign" class="text-red-500 font-bold hover:scale-105 transition-transform duration-150">X</button>
       </div>
       <div id="eligibleList" class="flex flex-col gap-2"></div>
     </div>
@@ -159,7 +159,7 @@
   <!--modalde profil -->
   <div id="profileModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
     <div class="bg-white p-5 rounded shadow w-[400px]">
-      <button id="closeProfile" class="text-red-500 font-bold float-right">X</button>
+      <button id="closeProfile" class="text-red-500 font-bold float-right hover:scale-105 transition-transform duration-150">X</button>
       <div id="profileContent"></div>
     </div>
   </div>

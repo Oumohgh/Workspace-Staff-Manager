@@ -115,49 +115,43 @@ const errName  = document.getElementById("err-name");
 const errPhoto = document.getElementById("err-photo");
 const errEmail = document.getElementById("err-email");
 const errPhone = document.getElementById("err-phone");
-//dd///
 
-    const ajouterDiv = document.createElement("div");
-    ajouterDiv.className = "worker-card flex flex-col items-center gap-1 m-2 text-center";
-    ajouterDiv.setAttribute("data-employee-id", emp.id);
-    ajouterDiv.innerHTML = `
-      <img src="${emp.photo || placeholderPhoto()}" alt="${fullName(emp)}"
-           class="w-12 h-12 rounded-full object-cover cursor-pointer preview-trigger" data-id="${emp.id}">
-      <span class="text-xs">${fullName(emp)}</span>
-      <button class="unassign-btn mt-1 text-xs text-red-600">X</button>
+function renderUnassigned() {
+  unassignedListEl.innerHTML = "";
+
+  const unassigned = employees.filter(e => !e.zone);
+  if (unassigned.length === 0) {
+    unassignedListEl.innerHTML = `<li class="text-gray-500 p-2">Aucun employé non affecté</li>`;
+    return;
+  }
+
+  unassigned.forEach(emp => {
+    const li = document.createElement("li");
+    li.className = "flex items-center gap-3 p-2 bg-white rounded shadow-sm";
+
+    li.innerHTML = `
+      <div class="w-10 h-10 rounded-full bg-cover bg-center"
+           style="background-image:url('${emp.photo || placeholderPhoto()}')"></div>
+
+      <div class="flex-1 min-w-0">
+        <div class="font-medium text-sm preview-trigger" data-id="${emp.id}">
+          ${fullName(emp)}
+        </div>
+        <div class="text-xs text-gray-500">${emp.role}</div>
+      </div>
+
+      <div class="flex gap-1">
+        <button class="edit-btn px-2 py-1 text-sm bg-yellow-200 rounded" data-id="${emp.id}">Edit</button>
+        <button class="delete-btn px-2 py-1 text-sm bg-red-200 rounded" data-id="${emp.id}">Delete</button>
+      </div>
     `;
-    
-    roomEl.appendChild(ajouterDiv);
+
+    unassignedListEl.appendChild(li);
   });
 }
-/* affiche modal mn preview */
-function showModal(emp){
-  const modal = document.querySelector(".info-popup");
-  if(!modal) return;
-  modal.innerHTML = `
-    <div class="bg-white rounded-lg p-4 w-80">
-      <div class="flex justify-end"><button id="closePreview" class="text-xl">×</button></div>
-      <div class="flex flex-col items-center gap-3">
-        <img src="${emp.photo || placeholderPhoto()}" class="w-24 h-24 rounded-full object-cover">
-        <h3 class="font-bold">${fullName(emp)}</h3>
-        <div class="text-sm text-gray-600">${emp.role}</div>
-        <div class="text-sm">${emp.email || ""}</div>
-        <div class="text-sm">${emp.tele || ""}</div>
-      </div>
-      <hr class="my-3">
-      <div>
-        <h4 class="text-sm font-semibold mb-2">Experiences</h4>
-        ${ (emp.experiences || []).map(x=>`<div class="mb-2 text-sm"><strong>${x.company||""}</strong> — ${x.role||""} <br><small>${x.duration||""}</small></div>`).join("") || "<div class='text-xs text-gray-500'>No experiences</div>"}
-      </div>
-      <div class="mt-3 flex gap-2">
-        <button id="closePreview2" class="flex-1 py-2 bg-indigo-600 text-black rounded">Fermer</button>
-      </div>
-    </div>
-  `;
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-}
 
+  
+//dd///
 /*  show modal dial employes f kola room */
 function openAssignModalFor(roomKey){
   currentAssignRoom = roomKey;
