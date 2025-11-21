@@ -381,24 +381,3 @@ function assignToRoomById(empId, roomKey){
     alert("This employee role is not allowed in this room.");
     return;
   }
-
-  emp.zone = roomKey;
-  saveEmployees();
-  renderSidebarUnassigned();
-  renderRooms();
-}
-
-
-document.querySelectorAll(".section-workers, .info-popup").forEach(el=>{
-  el.addEventListener("click", (e)=>{
-    if(e.target === el){
-      el.classList.add("hidden");
-    }
-  });
-});
-
-/*ini style */
-(function init(){
-  renderSidebarUnassigned();
-  renderRooms();
-})();
