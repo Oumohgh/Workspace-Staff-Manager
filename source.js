@@ -80,14 +80,42 @@ const validators = {
   phone:     v => v.trim() === "" || /^\+?[0-9 ()\-]{6,20}$/.test(v.trim()),
   photo:     v => v.trim() === "" || /^(https?:\/\/.+\.(jpg|jpeg|png|webp|gif))$/i.test(v.trim())
 };
-//dd//
 
-  // place employes f rooms
-  employees.filter(e => e.zone).forEach(emp => {
-    const roomKey = emp.zone;
-    const roomId = ROOM_IDS[roomKey];
-    const roomEl = document.getElementById(roomId);
-    if(!roomEl) return;
+let employees = loadEmployees();
+let editingId = null;
+let currentAssignZone = null;
+
+const unassignedListEl = document.getElementById("unassignedList");
+const openAddModalBtn = document.getElementById("openAddModal");
+const addModal = document.getElementById("addModal");
+const addEmployeeForm = document.getElementById("addEmployeeForm");
+
+const nameInput = document.getElementById("name");
+const roleInput = document.getElementById("role");
+const photoInput = document.getElementById("photo");
+const previewImg = document.getElementById("preview");
+const emailInput = document.getElementById("email");
+const phoneInput = document.getElementById("phone");
+
+const experiencesContainer = document.getElementById("experiences");
+const addExpBtn = document.getElementById("addExp");
+const clearExpsBtn = document.getElementById("clearExps");
+
+const cancelAddBtn = document.getElementById("cancelAdd");
+
+const assignModal = document.getElementById("assignModal");
+const eligibleList = document.getElementById("eligibleList");
+const closeAssign = document.getElementById("closeAssign");
+
+const profileModal = document.getElementById("profileModal");
+const profileContent = document.getElementById("profileContent");
+const closeProfile = document.getElementById("closeProfile");
+
+const errName  = document.getElementById("err-name");
+const errPhoto = document.getElementById("err-photo");
+const errEmail = document.getElementById("err-email");
+const errPhone = document.getElementById("err-phone");
+//dd///
 
     const ajouterDiv = document.createElement("div");
     ajouterDiv.className = "worker-card flex flex-col items-center gap-1 m-2 text-center";
