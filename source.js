@@ -20,19 +20,30 @@ const ROOM_IDS = {
 };
 
 /// 
-const roleZones = { //rroms m allowed
+const roleZones = {
   it: ["serveurs"],
   securite: ["securite"],
   reception: ["reception"],
   manager: ["reception","serveurs","securite","personnel","archives","conference"],
-  nettoyage: ["reception","serveurs","securite","personnel","conference"], // noot allowed to archive
+  nettoyage: ["reception","serveurs","securite","personnel","conference"],
   autres: ["reception","serveurs","securite","personnel","conference","archives"]
 };
 
 
+const ROLE_MAP = {
+  "receptionniste": "reception",
+  "technicien it": "it",
+  "technicien": "it",
+  "agent de sécurité": "securite",
+  "agent de securite": "securite",
+  "agent": "securite",
+  "manager": "manager",
+  "nettoyage": "nettoyage",
+  "autre": "autres",
+  "autres": "autres"
+};
+//
 
-let employees = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-let currentAssignRoom = null; 
 
 /* telecharger employes mn local storage */
 function saveEmployees() {
