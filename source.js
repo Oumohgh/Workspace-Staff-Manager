@@ -319,7 +319,7 @@ photoInput.addEventListener("input", e => {
       case "phone":
         setError(errPhone,
           validateField("phone", value) ? "" :
-          "Numéro invalide"
+          "Numero invalide"
         );
         break;
 
@@ -417,13 +417,13 @@ function openAssignModal(zoneKey) {
     return;
   }
 
-  /* Employés non affectés et autorisés */
+  /* Employes non affectes et autoris */
   const list = employees.filter(e =>
     !e.zone && isAdmisForRoom(e.role, zoneKey)
   );
 
   if (list.length === 0) {
-    eligibleList.innerHTML = `<div class="p-3 text-gray-600">Aucun employé éligible</div>`;
+    eligibleList.innerHTML = `<div class="p-3 text-gray-600">Aucun employe eligible</div>`;
   }
 
   list.forEach(emp => {
@@ -467,12 +467,12 @@ eligibleList.addEventListener("click", e => {
   const count    = employees.filter(e => e.zone === currentAssignZone).length;
 
   if (count >= capacity) {
-    alert("Capacité atteinte dans cette zone.");
+    alert("Capacite atteinte dans cette zone.");
     return;
   }
 
   if (!isAdmisForRoom(emp.role, currentAssignZone)) {
-    alert("Ce rôle n'est pas autorisé dans cette zone.");
+    alert("Ce role n est pas autorise dans cette zone");
     return;
   }
 
@@ -483,7 +483,7 @@ eligibleList.addEventListener("click", e => {
   renderAll();
 });
 
-/* Vérifier rôle autorisé */
+/* Verifier role autorise */
 function isAdmisForRoom(roleString, roomKey) {
   const rKey = getRoleKey(roleString);
   const allowed = roleZones[rKey];
@@ -509,7 +509,7 @@ function showProfile(emp) {
         </div>
       </div>
 
-      <h4 class="font-semibold mt-3">Expériences</h4>
+      <h4 class="font-semibold mt-3">Experiences</h4>
       <div class="p-2 border rounded bg-gray-50">
         ${
           emp.experiences?.length
@@ -551,7 +551,7 @@ profileContent.addEventListener("click", e => {
 
   if (t.id === "profileDelete") {
     const id = t.dataset.id;
-    if (!confirm("Supprimer cet employé ?")) return;
+    if (!confirm("Supprimer cet employe?")) return;
 
     employees = employees.filter(x => x.id !== id);
     saveEmployees();
@@ -584,7 +584,7 @@ document.addEventListener("click", e => {
 
   /* Supprimer de la liste non affecte */
   if (t.classList.contains("delete-btn")) {
-    if (!confirm("Supprimer cet employé ?")) return;
+    if (!confirm("Supprimer cet employe?")) return;
     employees = employees.filter(x => x.id !== t.dataset.id);
     saveEmployees();
     renderAll();

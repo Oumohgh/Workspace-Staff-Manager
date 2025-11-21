@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>Gestion du Personnel</title>
+  <meta charset="UTF-8" >
+  <title>Worspace Staff Manager</title>
 
  
   <script src="https://cdn.tailwindcss.com"></script>
@@ -36,7 +36,7 @@
     <div id="zone-conference" class=" rounded shadow flex flex-col justify-center items-center">
       <div class="zone-occupants flex flex-col gap-1"></div>
       <div class="flex flex-col items-center">
-        <span class="font-bold text-x zone-label">Conférence</span>
+        <span class="font-bold text-x zone-label">Conference</span>
         <button class="zone-plus text-blue-700 font-bold text-4xl hover:scale-105 transition-transform duration-150" data-zone="conference">+</button>
       </div>
 
@@ -93,7 +93,7 @@
       <form id="addEmployeeForm" class="space-y-3">
         <div>
           <label class="text-sm">Nom</label>
-          <input id="name" required class="w-full border p-2 rounded mt-1" />
+          <input id="name" required class="w-full border p-2 rounded mt-1" >
           <p id="err-name" class="text-red-600 text-sm mt-1"></p>
         </div>
         <div>
@@ -110,20 +110,20 @@
         </div>
         <div>
           <label class="text-sm">Photo (URL)</label>
-          <input id="photo" type="url" class="w-full border p-2 rounded mt-1" />
+          <input id="photo" type="url" class="w-full border p-2 rounded mt-1" >
           <p id="err-photo" class="text-red-600 text-sm mt-1"></p>
           
-          <img id="preview" class="w-24 h-24 object-cover rounded mt-2 hidden" alt="preview" />
+          <img id="preview" class="w-24 h-24 object-cover rounded mt-2 hidden" alt="photo url" >
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="text-sm">Email</label>
-            <input id="email" type="email" class="w-full border p-2 rounded mt-1" />
+            <input id="email" type="email" class="w-full border p-2 rounded mt-1" >
             <p id="err-email" class="text-red-600 text-sm mt-1"></p>
           </div>
           <div>
             <label class="text-sm">Telephone</label>
-            <input id="phone" type="tel" class="w-full border p-2 rounded mt-1" />
+            <input id="phone" type="tel" class="w-full border p-2 rounded mt-1" >
             <p id="err-phone" class="text-red-600 text-sm mt-1"></p>
           </div>
         </div>
