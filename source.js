@@ -121,7 +121,7 @@ function renderUnassigned() {
 
   const unassigned = employees.filter(e => !e.zone);
   if (unassigned.length === 0) {
-    unassignedListEl.innerHTML = `<li class="text-gray-500 p-2">Aucun employé non affecté</li>`;
+    unassignedListEl.innerHTML = `<li class="text-gray-500 p-2">Aucun employe non affecte</li>`;
     return;
   }
 
@@ -150,43 +150,36 @@ function renderUnassigned() {
   });
 }
 
+function renderZones() {
+  Object.keys(ROOM_IDS).forEach(zoneKey => {
+    const zoneEl = document.getElementById(ROOM_IDS[zoneKey]);
+    if (!zoneEl) return;
+
+    const occupantsEl = zoneEl.querySelector(".zone-occupants");
+    occupantsEl.innerHTML = "";
+
+    const occupants = employees.filter(e => e.zone === zoneKey);
+    const capacity  = ZONE_CAPACITY[zoneKey] ?? DEFAULT_CAPACITY;
+
+    /* Affichage du compteur */
+    const labelEl = zoneEl.querySelector(".zone-label");
+    if (labelEl) {
+      const labelTxt = labelEl.textContent.split("(")[0].trim();
+      labelEl.textContent = `${labelTxt} (${occupants.length}/${capacity})`;
+    }
+
   
+
+
+
+
+  
+
+  
+    
+  
+
 //dd///
-/*  show modal dial employes f kola room */
-function openAssignModalFor(roomKey){
-  currentAssignRoom = roomKey;
-  const modal = document.querySelector(".section-workers");
-  const container = modal.querySelector(".workers");
-  container.innerHTML = "";
-
-  // find wach emp egligable l hadek room
-  const admis= employees.filter(e => !e.zone && isAdmisForRoom(e.role, roomKey));
-
-  if(admis.length === 0){
-    container.innerHTML = `<div class="p-4 text-sm text-gray-600">No admis unassigned workers</div>`;
-  } else {
-    admis.forEach(emp => {
-      const div = document.createElement("div");
-      div.className = "p-3 border-b flex items-center justify-between";
-      div.innerHTML = `
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-cover" style="background-image:url('${emp.photo || placeholderPhoto()}')"></div>
-          <div>
-            <div class="text-sm font-medium">${fullName(emp)}</div>
-            <div class="text-xs text-black-500">${emp.role}</div>
-          </div>
-        </div>
-        <div>
-          <button class="assign-btn px-3 py-1 bg-green-600 text-white rounded text-sm" data-id="${emp.id}">Assign</button>
-        </div>
-      `;
-      container.appendChild(div);
-    });
-  }
-
-  modal.classList.remove("hidden");
-}
-
 function isAdmisForRoom(role, roomKey){
   // normalise role  bach matchi rols
   const r = (role || "").toLowerCase();
