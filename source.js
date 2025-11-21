@@ -1,13 +1,25 @@
-const ROOM_IDS = {
-  reception: "salle-reception",
-  serveurs: "salle-serveurs",
-  securite: "salle-securite",
-  personnel: "salle-personnel",
-  archives: "salle-archives",
-  conference: "salle-conference"
+
+const STORAGE_KEY = "employees1";
+
+const ZONE_CAPACITY = {
+  conference: 4,
+  reception: 4,
+  serveurs: 4,
+  securite: 4,
+  personnel: 4,
+  archives: 2
 };
 
- 
+const ROOM_IDS = {
+  conference: "zone-conference",
+  reception: "zone-reception",
+  serveurs: "zone-serveurs",
+  securite: "zone-securite",
+  personnel: "zone-personnel",
+  archives: "zone-archives"
+};
+
+/// 
 const roleZones = { //rroms m allowed
   it: ["serveurs"],
   securite: ["securite"],
@@ -17,7 +29,7 @@ const roleZones = { //rroms m allowed
   autres: ["reception","serveurs","securite","personnel","conference","archives"]
 };
 
-const STORAGE_KEY = "employees";
+
 
 let employees = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 let currentAssignRoom = null; 
